@@ -5,7 +5,7 @@ import client.Client;
 import client.SkillFactory;
 import client.command.Command;
 import tools.PacketCreator;
-
+import client.Skill;
 import java.util.*;
 
 public class BuffMeCommand extends Command {

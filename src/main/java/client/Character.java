@@ -23,7 +23,6 @@
 package client;
 
 import client.autoban.AutobanManager;
-import client.command.commands.gm1.BuffMeCommand;
 import client.creator.CharacterFactoryRecipe;
 import client.inventory.Equip;
 import client.inventory.Equip.StatUpgrade;
