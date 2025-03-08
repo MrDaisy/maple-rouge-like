@@ -33,11 +33,13 @@ public class SellCommand extends Command {
 
         if (type.equals("item")) {
             if (params.length < 2) {
-                player.yellowMessage("Syntax: @sell item <item_name>");
+                player.yellowMessage("Syntax: @sell item <item_name> [amount]");
                 return;
             }
-            String itemName = String.join(" ", Arrays.copyOfRange(params, 1, params.length)).toLowerCase();
-            sellItemByName(c, shop, player, itemName);
+
+            String itemName = String.join(" ", Arrays.copyOfRange(params, 1, params.length - 1)).toLowerCase();
+            int amount = params.length > 2 ? Integer.parseInt(params[params.length - 1]) : 0; // Amount can be passed after item name
+            sellItemByName(c, shop, player, itemName, amount);
             return;
         }
 
@@ -69,7 +71,7 @@ public class SellCommand extends Command {
                 for (short i = 0; i < inventory.getSlotLimit(); i++) {
                     Item tempItem = inventory.getItem((byte) i);
                     if (tempItem != null) {
-                        // Removed the debug message that shows item ID and slot
+                        player.yellowMessage("Found item: ID " + tempItem.getItemId() + " in slot " + i);
                         shop.sell(c, inventoryType, i, tempItem.getQuantity());
                     }
                 }
@@ -83,13 +85,12 @@ public class SellCommand extends Command {
         player.yellowMessage("All applicable inventory items have been sold!");
     }
 
-    private void sellItemByName(Client c, Shop shop, Character player, String itemName) {
+    private void sellItemByName(Client c, Shop shop, Character player, String itemName, int amount) {
         ItemInformationProvider itemInfoProvider = ItemInformationProvider.getInstance();
         boolean itemFound = false;
 
         player.yellowMessage("Searching for item: " + itemName);
 
-        // Convert the itemName to lowercase for case-insensitive comparison
         String lowerCaseItemName = itemName.toLowerCase();
 
         for (InventoryType inventoryType : allTypes) {
@@ -100,25 +101,31 @@ public class SellCommand extends Command {
                 if (tempItem != null) {
                     String tempItemName = itemInfoProvider.getName(tempItem.getItemId());
 
-                    // Make sure tempItemName is not null before comparing
                     if (tempItemName != null) {
-                        // Convert the item name in inventory to lowercase for comparison
                         String lowerCaseTempItemName = tempItemName.toLowerCase();
 
-                        // Removed the debug message that shows item ID and slot
+                        // Compare item names without considering case
                         if (lowerCaseTempItemName.equals(lowerCaseItemName)) {
-                            player.yellowMessage("Selling: " + tempItemName);
-                            shop.sell(c, inventoryType, i, tempItem.getQuantity());
+                            short quantityInStack = tempItem.getQuantity();
+                            short quantityToSell = (short) Math.min(amount, quantityInStack); // Cast to short to avoid type issue
+
+                            player.yellowMessage("Selling " + quantityToSell + " of " + tempItemName);
+                            shop.sell(c, inventoryType, i, quantityToSell);
+
+                            amount -= quantityToSell; // Decrease the remaining amount to sell
                             itemFound = true;
+
+                            if (amount <= 0) {
+                                player.yellowMessage("Sold " + itemName + "!");
+                                return;
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (itemFound) {
-            player.yellowMessage("Sold all items named '" + itemName + "'!");
-        } else {
+        if (!itemFound) {
             player.yellowMessage("No items found with the name '" + itemName + "'.");
         }
     }
