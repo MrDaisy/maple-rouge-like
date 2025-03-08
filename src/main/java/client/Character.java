@@ -434,9 +434,26 @@ public class Character extends AbstractCharacterObject {
         setPosition(new Point(0, 0));
     }
 
-    public void resetInventory()
-    {
-        this.inventory = new Inventory[InventoryType.values().length];
+    public void resetInventory(Client c) {
+        for (InventoryType type : InventoryType.values()) {
+
+            int numSlots = c.getPlayer().getInventory(type).getSlotLimit();
+            for (int i = 0; i < numSlots; i++) {
+                Item tempItem = c.getPlayer().getInventory(type).getItem((byte) i);
+                if (tempItem != null) {
+                    InventoryManipulator.removeFromSlot(c, type, (byte) i, tempItem.getQuantity(), false, false);
+                }
+            }
+        }
+        // Handle EQUIPPED inventory separately
+        List<Item> equippedItems = new ArrayList<>(c.getPlayer().getInventory(InventoryType.EQUIPPED).list());
+        for (Item equippedItem : equippedItems) {
+            if (equippedItem != null) {
+                InventoryManipulator.removeFromSlot(c, InventoryType.EQUIPPED, equippedItem.getPosition(), equippedItem.getQuantity(), false, false);
+            }
+        }
+        // Reset mesos to 0
+        c.getPlayer().gainMeso(-c.getPlayer().getMeso(), true);
     }
 
     private static Job getJobStyleInternal(int jobid, byte opt) {
@@ -1226,7 +1243,7 @@ public class Character extends AbstractCharacterObject {
             addhp += Randomizer.rand(300, 350);
             addmp += Randomizer.rand(150, 200);
         }
-        
+
         /*
         //aran perks?
         int newJobId = newJob.getId();
@@ -1310,7 +1327,7 @@ public class Character extends AbstractCharacterObject {
         if (guild != null) {
             guild.broadcast(packet, id);
         }
-        
+
         /*
         if(partnerid > 0) {
             partner.sendPacket(packet); not yet implemented
@@ -3253,12 +3270,12 @@ public class Character extends AbstractCharacterObject {
 
                 if (YamlConfig.config.server.USE_EXP_GAIN_LOG) {
                     ExpLogRecord expLogRecord = new ExpLogger.ExpLogRecord(
-                        getWorldServer().getExpRate(),
-                        expCoupon,
-                        totalExpGained,
-                        exp.get(),
-                        new Timestamp(lastExpGainTime),
-                        id
+                            getWorldServer().getExpRate(),
+                            expCoupon,
+                            totalExpGained,
+                            exp.get(),
+                            new Timestamp(lastExpGainTime),
+                            id
                     );
                     ExpLogger.putExpLogRecord(expLogRecord);
                 }
@@ -6416,57 +6433,60 @@ public class Character extends AbstractCharacterObject {
             this.addMaxMP(1000);
         }
     }
-    public synchronized void jobUpdateLogic(int level) {
-        if (level % 10 == 0) {
+    public synchronized void jobUpdateLogic(int level){
+        if (level % 10 == 0)
+        {
             List<Job> jobOptionList;
             Random random = new Random();
-            if (level < 30) { // First job
+            if (level < 30) // First job
+            {
                 jobOptionList = Arrays.asList(Job.WARRIOR, Job.MAGICIAN, Job.THIEF,
                         Job.BOWMAN, Job.PIRATE, Job.DAWNWARRIOR1, Job.BLAZEWIZARD1,
                         Job.WINDARCHER1, Job.NIGHTWALKER1, Job.THUNDERBREAKER1);
-            } else if (level < 70) { // Second job
+            }
+            else if (level < 70) // Second job
+            {
                 jobOptionList = Arrays.asList(Job.FIGHTER, Job.PAGE, Job.SPEARMAN,
                         Job.FP_WIZARD, Job.IL_WIZARD, Job.CLERIC,
                         Job.HUNTER, Job.CROSSBOWMAN, Job.ASSASSIN, Job.BANDIT,
                         Job.BRAWLER, Job.GUNSLINGER, Job.DAWNWARRIOR2, Job.BLAZEWIZARD2,
                         Job.WINDARCHER2, Job.NIGHTWALKER2, Job.THUNDERBREAKER2);
-            } else if (level < 120) { // Third job
+            }
+            else if (level < 120)  // Third job
+            {
                 jobOptionList = Arrays.asList(Job.CRUSADER, Job.WHITEKNIGHT, Job.DRAGONKNIGHT,
                         Job.FP_MAGE, Job.IL_MAGE, Job.PRIEST,
                         Job.RANGER, Job.SNIPER, Job.HERMIT, Job.CHIEFBANDIT,
                         Job.MARAUDER, Job.OUTLAW, Job.DAWNWARRIOR3, Job.BLAZEWIZARD3,
                         Job.WINDARCHER3, Job.NIGHTWALKER3, Job.THUNDERBREAKER3);
-            } else { // Fourth job
+            }
+            else // Fourth Job
+            {
                 jobOptionList = Arrays.asList(Job.HERO, Job.PALADIN, Job.DARKKNIGHT,
                         Job.FP_ARCHMAGE, Job.IL_ARCHMAGE, Job.BISHOP,
                         Job.BOWMASTER, Job.MARKSMAN, Job.NIGHTLORD, Job.SHADOWER,
                         Job.BUCCANEER, Job.CORSAIR);
             }
-
-            // Filter out the current job and select a new one
             List<Job> availableJobs = jobOptionList.stream()
                     .filter(job -> job != this.job)
                     .toList();
-            Job newJob = availableJobs.get(random.nextInt(availableJobs.size()));
-            this.job = newJob;
-
-            // Update the player's class history
-            BuffMeCommand.updateClassHistory(this, newJob.name());
+            this.job = availableJobs.get(random.nextInt(availableJobs.size()));
         }
-
-        // Update skills for the new job
+        // Create a list of stats to update
         int jobId = this.job.getId();
         for (Skill skill : SkillFactory.getSkills()) {
             if (GameConstants.isInJobTree(skill.getId(), jobId)) {
+                // Set skill to max level
                 int maxLevel = skill.getMaxLevel();
-                changeSkillLevel(skill, (byte) maxLevel, maxLevel, -1);
+                changeSkillLevel(skill, (byte)maxLevel, maxLevel, -1);
             }
         }
-
-        // Send stat update to the client
         List<Pair<Stat, Integer>> stats = new ArrayList<>();
-        stats.add(new Pair<>(Stat.JOB, this.job.jobid));
-        sendPacket(PacketCreator.updatePlayerStats(stats, true, this));
+        stats.add(new Pair<>(Stat.JOB, this.job.jobid)); // Add the Stat.JOB update with the new job ID
+
+        // Send the stat update packet to the client
+        sendPacket(PacketCreator.updatePlayerStats(stats, true, this)); // 'true' enables actions after update
+        return;
     }
 
     public synchronized void checkAchievements(int level)
@@ -7567,7 +7587,7 @@ public class Character extends AbstractCharacterObject {
                         }
                     }
                 }
-                
+
                 ret.buddylist.loadFromDb(charid);
                 ret.storage = wserv.getAccountStorage(ret.accountid);
 
@@ -7578,7 +7598,7 @@ public class Character extends AbstractCharacterObject {
                     wserv.loadAccountStorage(ret.accountid);
                     ret.storage = wserv.getAccountStorage(ret.accountid);
                 }
-                
+
                 int startHp = ret.hp, startMp = ret.mp;
                 ret.reapplyLocalStats();
                 ret.changeHpMp(startHp, startMp, true);
@@ -8523,7 +8543,7 @@ public class Character extends AbstractCharacterObject {
                         ps.executeBatch();
                     }
                 }
-                
+
                 con.commit();
                 return true;
             } catch (Exception e) {
@@ -9482,7 +9502,7 @@ public class Character extends AbstractCharacterObject {
     }
 
     public boolean gainSlots(int type, int slots, boolean update) {
-        int newLimit = gainSlotsInternal(type, slots*5);
+        int newLimit = gainSlotsInternal(type, slots * 3);
         if (newLimit != -1) {
             this.saveCharToDB();
             if (update) {
@@ -10957,7 +10977,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -10967,7 +10987,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -10976,7 +10996,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -10986,7 +11006,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -10996,7 +11016,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -11006,7 +11026,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -11016,7 +11036,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -11026,7 +11046,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -11036,7 +11056,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -11046,7 +11066,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
@@ -11056,7 +11076,7 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, newName);
             ps.setString(2, oldName);
             ps.executeUpdate();
-        } catch(SQLException e) { 
+        } catch(SQLException e) {
             e.printStackTrace();
             FilePrinter.printError(FilePrinter.CHANGE_CHARACTER_NAME, e, "Character ID : " + characterId);
             return false;
