@@ -25,7 +25,7 @@ public class SellCommand extends Command {
         Shop shop = ShopFactory.getInstance().getShop(1337); // this is the GM shop
 
         if (type.equalsIgnoreCase("item") && params.length >= 2) {
-            String itemName = String.join(" ", params[1].split("_"));
+            String itemName = String.join(" ", params[1].split("_")).toLowerCase();
             sellAllItemsByName(player, shop, itemName);
             return;
         }
@@ -35,7 +35,7 @@ public class SellCommand extends Command {
             try {
                 sellSlotAmount = Integer.parseInt(params[1]);
             } catch (NumberFormatException e) {
-                sellItemsByName(player, shop, type);
+                sellItemsByName(player, shop, type.toLowerCase());
                 return;
             }
         }
@@ -83,7 +83,7 @@ public class SellCommand extends Command {
         for (InventoryType inventoryType : allTypes) {
             for (short i = 0; i < player.getInventory(inventoryType).getSlotLimit(); i++) {
                 Item tempItem = player.getInventory(inventoryType).getItem((byte) i);
-                if (tempItem != null && String.valueOf(tempItem.getItemId()).toLowerCase().contains(itemName.toLowerCase())) {
+                if (tempItem != null && String.valueOf(tempItem.getItemId()).toLowerCase().contains(itemName)) {
                     shop.sell(player.getClient(), inventoryType, i, tempItem.getQuantity());
                     player.getInventory(inventoryType).removeItem((byte) i);
                 }
