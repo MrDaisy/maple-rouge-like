@@ -23,7 +23,6 @@
 package client;
 
 import client.autoban.AutobanManager;
-import client.command.commands.gm1.PlayerClass;
 import client.creator.CharacterFactoryRecipe;
 import client.inventory.Equip;
 import client.inventory.Equip.StatUpgrade;
@@ -370,7 +369,6 @@ public class Character extends AbstractCharacterObject {
     private long lizardLastSpawnTime = 0;
     private long usedPotionTime = System.currentTimeMillis();
     public AccountExtraDetails accountExtraDetails;
-    private List<PlayerClass> attainedClasses;
 
 
     private Character() {
@@ -3132,11 +3130,6 @@ public class Character extends AbstractCharacterObject {
                 }
             }, 60000);
         }
-    }
-
-    public List<PlayerClass> getAttainedClasses() {
-        // return the list of PlayerClass that the player has attained
-        return this.attainedClasses; // make sure you have this list initialized properly
     }
 
     public enum FameStatus {
