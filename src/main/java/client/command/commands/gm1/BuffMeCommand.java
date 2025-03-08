@@ -574,7 +574,7 @@ public class BuffMeCommand extends Command {
     // Helper method to load class history from player data
     private static List<String> loadClassHistoryFromPlayerData(Character player) {
         List<String> classHistory = new ArrayList<>();
-        int jobId = player.getJob().getId(); // Use getId() to get the job ID from the Job object
+        int jobId = player.getJob().getId(); // Get the current job ID
         String currentJob = getJobName(jobId);
 
         // Add all previous jobs based on the player's job progression
