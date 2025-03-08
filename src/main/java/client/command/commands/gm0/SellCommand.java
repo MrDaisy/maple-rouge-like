@@ -107,8 +107,8 @@ public class SellCommand extends Command {
 
                         player.yellowMessage("Checking: " + tempItemName + " (ID: " + tempItem.getItemId() + ") in slot " + i);
 
-                        // Use contains to allow for partial matching (including multi-word names)
-                        if (lowerCaseTempItemName.contains(lowerCaseItemName)) {
+                        // Check for exact match
+                        if (lowerCaseTempItemName.equals(lowerCaseItemName)) {
                             player.yellowMessage("Selling: " + tempItemName);
                             shop.sell(c, inventoryType, i, tempItem.getQuantity());
                             itemFound = true;
