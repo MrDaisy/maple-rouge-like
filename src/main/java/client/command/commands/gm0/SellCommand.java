@@ -69,7 +69,7 @@ public class SellCommand extends Command {
                 for (short i = 0; i < inventory.getSlotLimit(); i++) {
                     Item tempItem = inventory.getItem((byte) i);
                     if (tempItem != null) {
-                        player.yellowMessage("Found item: ID " + tempItem.getItemId() + " in slot " + i);
+                        // Removed the debug message that shows item ID and slot
                         shop.sell(c, inventoryType, i, tempItem.getQuantity());
                     }
                 }
@@ -105,9 +105,7 @@ public class SellCommand extends Command {
                         // Convert the item name in inventory to lowercase for comparison
                         String lowerCaseTempItemName = tempItemName.toLowerCase();
 
-                        player.yellowMessage("Checking: " + tempItemName + " (ID: " + tempItem.getItemId() + ") in slot " + i);
-
-                        // Check for exact match
+                        // Removed the debug message that shows item ID and slot
                         if (lowerCaseTempItemName.equals(lowerCaseItemName)) {
                             player.yellowMessage("Selling: " + tempItemName);
                             shop.sell(c, inventoryType, i, tempItem.getQuantity());
