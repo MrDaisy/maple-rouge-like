@@ -132,7 +132,7 @@ public class BuffMeCommand extends Command {
         ));
 
         // Blaze Wizard
-        CLASS_BUFFS.put("BlazeWizard", Arrays.asList(
+        CLASS_BUFFS.put("Blaze Wizard", Arrays.asList(
                 // 1st Job
                 12000000, // INCREASING_MAX_MP
                 12001001, // MAGIC_GUARD
