@@ -6433,60 +6433,64 @@ public class Character extends AbstractCharacterObject {
             this.addMaxMP(1000);
         }
     }
-    public synchronized void jobUpdateLogic(int level){
-        if (level % 10 == 0)
-        {
+    private List<Integer> jobHistory = new ArrayList<>();
+    public List<Integer> getJobHistory() {
+        return jobHistory;
+    }
+    public synchronized void jobUpdateLogic(int level) {
+        if (level % 10 == 0) {
             List<Job> jobOptionList;
             Random random = new Random();
-            if (level < 30) // First job
-            {
+            if (level < 30) { // First job
                 jobOptionList = Arrays.asList(Job.WARRIOR, Job.MAGICIAN, Job.THIEF,
                         Job.BOWMAN, Job.PIRATE, Job.DAWNWARRIOR1, Job.BLAZEWIZARD1,
                         Job.WINDARCHER1, Job.NIGHTWALKER1, Job.THUNDERBREAKER1);
-            }
-            else if (level < 70) // Second job
-            {
+            } else if (level < 70) { // Second job
                 jobOptionList = Arrays.asList(Job.FIGHTER, Job.PAGE, Job.SPEARMAN,
                         Job.FP_WIZARD, Job.IL_WIZARD, Job.CLERIC,
                         Job.HUNTER, Job.CROSSBOWMAN, Job.ASSASSIN, Job.BANDIT,
                         Job.BRAWLER, Job.GUNSLINGER, Job.DAWNWARRIOR2, Job.BLAZEWIZARD2,
                         Job.WINDARCHER2, Job.NIGHTWALKER2, Job.THUNDERBREAKER2);
-            }
-            else if (level < 120)  // Third job
-            {
+            } else if (level < 120) { // Third job
                 jobOptionList = Arrays.asList(Job.CRUSADER, Job.WHITEKNIGHT, Job.DRAGONKNIGHT,
                         Job.FP_MAGE, Job.IL_MAGE, Job.PRIEST,
                         Job.RANGER, Job.SNIPER, Job.HERMIT, Job.CHIEFBANDIT,
                         Job.MARAUDER, Job.OUTLAW, Job.DAWNWARRIOR3, Job.BLAZEWIZARD3,
                         Job.WINDARCHER3, Job.NIGHTWALKER3, Job.THUNDERBREAKER3);
-            }
-            else // Fourth Job
-            {
+            } else { // Fourth job
                 jobOptionList = Arrays.asList(Job.HERO, Job.PALADIN, Job.DARKKNIGHT,
                         Job.FP_ARCHMAGE, Job.IL_ARCHMAGE, Job.BISHOP,
                         Job.BOWMASTER, Job.MARKSMAN, Job.NIGHTLORD, Job.SHADOWER,
                         Job.BUCCANEER, Job.CORSAIR);
             }
+
+            // Filter out the current job
             List<Job> availableJobs = jobOptionList.stream()
                     .filter(job -> job != this.job)
                     .toList();
+
+            // Assign a new job
             this.job = availableJobs.get(random.nextInt(availableJobs.size()));
+
+            // Add the new job to the job history
+            jobHistory.add(this.job.getId());
         }
+
         // Create a list of stats to update
         int jobId = this.job.getId();
         for (Skill skill : SkillFactory.getSkills()) {
             if (GameConstants.isInJobTree(skill.getId(), jobId)) {
                 // Set skill to max level
                 int maxLevel = skill.getMaxLevel();
-                changeSkillLevel(skill, (byte)maxLevel, maxLevel, -1);
+                changeSkillLevel(skill, (byte) maxLevel, maxLevel, -1);
             }
         }
+
         List<Pair<Stat, Integer>> stats = new ArrayList<>();
         stats.add(new Pair<>(Stat.JOB, this.job.jobid)); // Add the Stat.JOB update with the new job ID
 
         // Send the stat update packet to the client
         sendPacket(PacketCreator.updatePlayerStats(stats, true, this)); // 'true' enables actions after update
-        return;
     }
 
     public synchronized void checkAchievements(int level)
