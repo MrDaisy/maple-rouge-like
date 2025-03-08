@@ -22,8 +22,8 @@ public class SellCommand extends Command {
     public void execute(Client c, String[] params) {
         Character player = c.getPlayer();
 
-        if (params.length < 2) {
-            player.yellowMessage("Syntax: @sell <all, equip, use, etc, setup, cash, item> [item_name or sell slot amount]");
+        if (params.length < 1) {
+            player.yellowMessage("Syntax: @sell <all/equip/use/etc/setup/cash/item> [item_name or sell slot amount]");
             return;
         }
 
@@ -32,11 +32,11 @@ public class SellCommand extends Command {
         int sellSlotAmount = 101;
 
         if (type.equals("item")) {
-            if (params.length < 3) {
+            if (params.length < 2) {
                 player.yellowMessage("Syntax: @sell item <item_name>");
                 return;
             }
-            String itemName = String.join(" ", Arrays.copyOfRange(params, 2, params.length)).toLowerCase();
+            String itemName = String.join(" ", Arrays.copyOfRange(params, 1, params.length)).toLowerCase();
             sellItemByName(c, shop, player, itemName);
             return;
         }
@@ -46,7 +46,6 @@ public class SellCommand extends Command {
             return;
         }
 
-        // Check if user provided a custom sell limit
         if (params.length >= 2) {
             try {
                 sellSlotAmount = Integer.parseInt(params[1]);
@@ -65,10 +64,12 @@ public class SellCommand extends Command {
 
                 Inventory inventory = player.getInventory(inventoryType);
 
-                for (short i = 0; i <= sellSlotAmount; i++) {
+                player.yellowMessage("Processing " + inventoryType.name() + " inventory...");
+
+                for (short i = 0; i < inventory.getSlotLimit(); i++) {
                     Item tempItem = inventory.getItem((byte) i);
                     if (tempItem != null) {
-                        player.yellowMessage("Selling item: " + tempItem.getItemId() + " from slot " + i); // Debugging message
+                        player.yellowMessage("Found item: ID " + tempItem.getItemId() + " in slot " + i);
                         shop.sell(c, inventoryType, i, tempItem.getQuantity());
                     }
                 }
@@ -86,18 +87,21 @@ public class SellCommand extends Command {
         ItemInformationProvider itemInfoProvider = ItemInformationProvider.getInstance();
         boolean itemFound = false;
 
+        player.yellowMessage("Searching for item: " + itemName);
+
         for (InventoryType inventoryType : allTypes) {
             Inventory inventory = player.getInventory(inventoryType);
+
             for (byte i = 0; i < inventory.getSlotLimit(); i++) {
                 Item tempItem = inventory.getItem(i);
                 if (tempItem != null) {
                     String tempItemName = itemInfoProvider.getName(tempItem.getItemId());
-                    if (tempItemName != null) {
-                        player.yellowMessage("Checking item: " + tempItemName + " (ID: " + tempItem.getItemId() + ") in slot " + i); // Debugging message
-                        if (tempItemName.equalsIgnoreCase(itemName)) {
-                            shop.sell(c, inventoryType, i, tempItem.getQuantity());
-                            itemFound = true;
-                        }
+                    player.yellowMessage("Checking: " + tempItemName + " (ID: " + tempItem.getItemId() + ") in slot " + i);
+
+                    if (tempItemName != null && tempItemName.equalsIgnoreCase(itemName)) {
+                        player.yellowMessage("Selling: " + tempItemName);
+                        shop.sell(c, inventoryType, i, tempItem.getQuantity());
+                        itemFound = true;
                     }
                 }
             }
