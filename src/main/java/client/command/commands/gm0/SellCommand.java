@@ -3,93 +3,102 @@ package client.command.commands.gm0;
 import client.Character;
 import client.Client;
 import client.command.Command;
+import client.inventory.Inventory;
 import client.inventory.InventoryType;
 import client.inventory.Item;
+import server.ItemInformationProvider;
 import server.Shop;
 import server.ShopFactory;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public class SellCommand extends Command {
     {
-        setDescription("Sells all items in an inventory tab, can set max slot number to sell or by item name");
+        setDescription("Sells all items in an inventory tab or a specific item by name.");
     }
+
     @Override
     public void execute(Client c, String[] params) {
         Character player = c.getPlayer();
-        if (params.length < 1) {
-            player.yellowMessage("Syntax: @sell <all, equip, use, setup, etc or cash> <sell slot amount> or @sell <Item name> or @sell item <item name>");
-            return;
-        }
-        String type = params[0];
-        Shop shop = ShopFactory.getInstance().getShop(1337); // this is the GM shop
 
-        if (type.equalsIgnoreCase("item") && params.length >= 2) {
-            String itemName = String.join(" ", params[1].split("_")).toLowerCase();
-            sellAllItemsByName(player, shop, itemName);
+        if (params.length < 2) {
+            player.yellowMessage("Syntax: @sell <all, equip, use, etc, setup, cash, item> [item_name or sell slot amount]");
             return;
         }
 
+        String type = params[0].toLowerCase();
+        Shop shop = ShopFactory.getInstance().getShop(1337); // GM Shop
         int sellSlotAmount = 101;
+
+        if (type.equals("item")) {
+            if (params.length < 3) {
+                player.yellowMessage("Syntax: @sell item <item_name>");
+                return;
+            }
+            String itemName = String.join(" ", Arrays.copyOfRange(params, 2, params.length)).toLowerCase();
+            sellItemByName(c, shop, player, itemName);
+            return;
+        }
+
         if (params.length >= 2) {
             try {
                 sellSlotAmount = Integer.parseInt(params[1]);
             } catch (NumberFormatException e) {
-                sellItemsByName(player, shop, type.toLowerCase());
-                return;
+                player.yellowMessage("Invalid slot amount. Using default value: 101.");
             }
         }
 
-        boolean isAll = type.equalsIgnoreCase("all");
-        if (!allTypesAsString.contains(type.toLowerCase()) && !isAll) {
-            player.yellowMessage("Error: The specified slot type '" + type + "' does not exist.");
+        boolean isAll = type.equals("all");
+
+        if (!allTypesAsString.contains(type)) {
+            player.yellowMessage("Error: The specified inventory type '" + type + "' does not exist.");
             return;
         }
+
         for (InventoryType inventoryType : allTypes) {
             if (isAll || inventoryType.name().toLowerCase().equals(type)) {
                 if (isAll && inventoryType == InventoryType.CASH) {
                     continue;
                 }
                 for (short i = 0; i <= sellSlotAmount; i++) {
-                    Item tempItem = c.getPlayer().getInventory(inventoryType).getItem((byte) i);
+                    Item tempItem = player.getInventory(inventoryType).getItem((byte) i);
                     if (tempItem != null) {
                         shop.sell(c, inventoryType, i, tempItem.getQuantity());
-                        c.getPlayer().getInventory(inventoryType).removeItem((byte) i);
                     }
                 }
-                if (!isAll) { // quick break
-                    player.yellowMessage("Slot " + type + " sold!");
-                    return;  // Early return after clearing the specific type
+                if (!isAll) {
+                    player.yellowMessage("Sold all items in " + type + " inventory!");
+                    return;
                 }
             }
         }
-        player.yellowMessage("All slots sold!");
+        player.yellowMessage("All applicable inventory items have been sold!");
     }
 
-    private void sellItemsByName(Character player, Shop shop, String itemName) {
-        for (InventoryType inventoryType : allTypes) {
-            for (short i = 0; i < player.getInventory(inventoryType).getSlotLimit(); i++) {
-                Item tempItem = player.getInventory(inventoryType).getItem((byte) i);
-                if (tempItem != null && String.valueOf(tempItem.getItemId()).equalsIgnoreCase(itemName)) {
-                    shop.sell(player.getClient(), inventoryType, i, tempItem.getQuantity());
-                    player.getInventory(inventoryType).removeItem((byte) i);
-                }
-            }
-        }
-        player.yellowMessage("Items with name '" + itemName + "' sold!");
-    }
+    private void sellItemByName(Client c, Shop shop, Character player, String itemName) {
+        ItemInformationProvider itemInfoProvider = ItemInformationProvider.getInstance();
+        boolean itemFound = false;
 
-    private void sellAllItemsByName(Character player, Shop shop, String itemName) {
         for (InventoryType inventoryType : allTypes) {
-            for (short i = 0; i < player.getInventory(inventoryType).getSlotLimit(); i++) {
-                Item tempItem = player.getInventory(inventoryType).getItem((byte) i);
-                if (tempItem != null && String.valueOf(tempItem.getItemId()).toLowerCase().contains(itemName)) {
-                    shop.sell(player.getClient(), inventoryType, i, tempItem.getQuantity());
-                    player.getInventory(inventoryType).removeItem((byte) i);
+            Inventory inventory = player.getInventory(inventoryType);
+            for (byte i = 0; i < inventory.getSlotLimit(); i++) {
+                Item tempItem = inventory.getItem(i);
+                if (tempItem != null) {
+                    String tempItemName = itemInfoProvider.getName(tempItem.getItemId());
+                    if (tempItemName != null && tempItemName.equalsIgnoreCase(itemName)) {
+                        shop.sell(c, inventoryType, i, tempItem.getQuantity());
+                        itemFound = true;
+                    }
                 }
             }
         }
-        player.yellowMessage("All items containing '" + itemName + "' in their name sold!");
+
+        if (itemFound) {
+            player.yellowMessage("Sold all items named '" + itemName + "'!");
+        } else {
+            player.yellowMessage("No items found with the name '" + itemName + "'.");
+        }
     }
 
     private final InventoryType[] allTypes = {InventoryType.EQUIP, InventoryType.USE, InventoryType.ETC, InventoryType.SETUP, InventoryType.CASH};
