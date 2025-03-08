@@ -311,6 +311,9 @@ public class BuffMeCommand extends Command {
         Character player = c.getPlayer();
         int playerId = player.getId();
 
+        // Initialize class history
+        initializeClassHistory(player);
+
         // Get the player's class history
         List<String> classHistory = PLAYER_CLASS_HISTORY.getOrDefault(playerId, new ArrayList<>());
 
@@ -338,6 +341,20 @@ public class BuffMeCommand extends Command {
         player.dropMessage(5, "All buffs applied.");
     }
 
+    // Helper method to initialize class history from player data
+    public static void initializeClassHistory(Character player) {
+        int playerId = player.getId();
+        if (!PLAYER_CLASS_HISTORY.containsKey(playerId)) {
+            // Load class history from player data
+            List<String> classHistory = player.getClassHistory();
+            if (classHistory != null) {
+                PLAYER_CLASS_HISTORY.put(playerId, classHistory);
+            } else {
+                PLAYER_CLASS_HISTORY.put(playerId, new ArrayList<>());
+            }
+        }
+    }
+
     // Helper method to update class history when the player changes classes
     public static void updateClassHistory(Character player, String newClass) {
         int playerId = player.getId();
@@ -347,6 +364,8 @@ public class BuffMeCommand extends Command {
         if (!classHistory.contains(newClass)) {
             classHistory.add(newClass);
             PLAYER_CLASS_HISTORY.put(playerId, classHistory);
+            player.setClassHistory(classHistory); // Save to player data
+            System.out.println("Updated class history for player " + playerId + ": " + classHistory);
         }
     }
 
