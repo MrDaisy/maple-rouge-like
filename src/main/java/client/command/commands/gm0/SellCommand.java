@@ -41,6 +41,12 @@ public class SellCommand extends Command {
             return;
         }
 
+        if (!allTypesAsString.contains(type)) {
+            player.yellowMessage("Error: The specified inventory type '" + type + "' does not exist.");
+            return;
+        }
+
+        // Check if user provided a custom sell limit
         if (params.length >= 2) {
             try {
                 sellSlotAmount = Integer.parseInt(params[1]);
@@ -51,22 +57,22 @@ public class SellCommand extends Command {
 
         boolean isAll = type.equals("all");
 
-        if (!allTypesAsString.contains(type)) {
-            player.yellowMessage("Error: The specified inventory type '" + type + "' does not exist.");
-            return;
-        }
-
         for (InventoryType inventoryType : allTypes) {
             if (isAll || inventoryType.name().toLowerCase().equals(type)) {
                 if (isAll && inventoryType == InventoryType.CASH) {
-                    continue;
+                    continue; // Skip selling Cash inventory
                 }
+
+                Inventory inventory = player.getInventory(inventoryType);
+
                 for (short i = 0; i <= sellSlotAmount; i++) {
-                    Item tempItem = player.getInventory(inventoryType).getItem((byte) i);
+                    Item tempItem = inventory.getItem((byte) i);
                     if (tempItem != null) {
+                        player.yellowMessage("Selling item: " + tempItem.getItemId() + " from slot " + i); // Debugging message
                         shop.sell(c, inventoryType, i, tempItem.getQuantity());
                     }
                 }
+
                 if (!isAll) {
                     player.yellowMessage("Sold all items in " + type + " inventory!");
                     return;
@@ -86,9 +92,12 @@ public class SellCommand extends Command {
                 Item tempItem = inventory.getItem(i);
                 if (tempItem != null) {
                     String tempItemName = itemInfoProvider.getName(tempItem.getItemId());
-                    if (tempItemName != null && tempItemName.equalsIgnoreCase(itemName)) {
-                        shop.sell(c, inventoryType, i, tempItem.getQuantity());
-                        itemFound = true;
+                    if (tempItemName != null) {
+                        player.yellowMessage("Checking item: " + tempItemName + " (ID: " + tempItem.getItemId() + ") in slot " + i); // Debugging message
+                        if (tempItemName.equalsIgnoreCase(itemName)) {
+                            shop.sell(c, inventoryType, i, tempItem.getQuantity());
+                            itemFound = true;
+                        }
                     }
                 }
             }
