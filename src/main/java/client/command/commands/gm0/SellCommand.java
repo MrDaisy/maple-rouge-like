@@ -89,6 +89,9 @@ public class SellCommand extends Command {
 
         player.yellowMessage("Searching for item: " + itemName);
 
+        // Convert the itemName to lowercase for case-insensitive comparison
+        String lowerCaseItemName = itemName.toLowerCase();
+
         for (InventoryType inventoryType : allTypes) {
             Inventory inventory = player.getInventory(inventoryType);
 
@@ -96,12 +99,20 @@ public class SellCommand extends Command {
                 Item tempItem = inventory.getItem(i);
                 if (tempItem != null) {
                     String tempItemName = itemInfoProvider.getName(tempItem.getItemId());
-                    player.yellowMessage("Checking: " + tempItemName + " (ID: " + tempItem.getItemId() + ") in slot " + i);
 
-                    if (tempItemName != null && tempItemName.equalsIgnoreCase(itemName)) {
-                        player.yellowMessage("Selling: " + tempItemName);
-                        shop.sell(c, inventoryType, i, tempItem.getQuantity());
-                        itemFound = true;
+                    // Make sure tempItemName is not null before comparing
+                    if (tempItemName != null) {
+                        // Convert the item name in inventory to lowercase for comparison
+                        String lowerCaseTempItemName = tempItemName.toLowerCase();
+
+                        player.yellowMessage("Checking: " + tempItemName + " (ID: " + tempItem.getItemId() + ") in slot " + i);
+
+                        // Use contains to allow for partial matching (including multi-word names)
+                        if (lowerCaseTempItemName.contains(lowerCaseItemName)) {
+                            player.yellowMessage("Selling: " + tempItemName);
+                            shop.sell(c, inventoryType, i, tempItem.getQuantity());
+                            itemFound = true;
+                        }
                     }
                 }
             }
