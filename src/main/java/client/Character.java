@@ -6435,16 +6435,10 @@ public class Character extends AbstractCharacterObject {
     }
     private List<Integer> jobHistory = new ArrayList<>();
 
-    // Constructor and other methods...
-
     public List<Integer> getJobHistory() {
         return jobHistory;
     }
 
-    // Optional: If jobs need to be added dynamically
-    public void addJobToHistory(int jobId) {
-        jobHistory.add(jobId);
-    }
     public synchronized void jobUpdateLogic(int level){
         if (level % 10 == 0)
         {
