@@ -211,138 +211,130 @@ public class BuffMeCommand extends Command {
         ));
 
         jobBuffs.put(Job.PIRATE.getId(), Arrays.asList(
-                5001001, // Flash Fist
-                5001002  // Somersault Kick
+                5001001  // Flash fist
         ));
 
         jobBuffs.put(Job.BRAWLER.getId(), Arrays.asList(
-                5101004, // Corkscrew Blow
-                5101006  // Knuckler Booster
+              5101006  // Knuckler Booster
         ));
 
         jobBuffs.put(Job.MARAUDER.getId(), Arrays.asList(
-                5111002, // Energy Blast
-                5111006  // Shockwave
+
         ));
 
         jobBuffs.put(Job.BUCCANEER.getId(), Arrays.asList(
-                5121000, // Maple Warrior
-                5121007  // Barrage
+                5121000 // Maple Warrior
+
         ));
 
         jobBuffs.put(Job.GUNSLINGER.getId(), Arrays.asList(
-                5201003, // Gun Booster
-                5201006  // Recoil Shot
+                5201003 // Gun Booster
+
         ));
 
         jobBuffs.put(Job.OUTLAW.getId(), Arrays.asList(
-                5211002, // Gaviota
-                5211005  // Ice Splitter
+
         ));
 
         jobBuffs.put(Job.CORSAIR.getId(), Arrays.asList(
                 5221000, // Maple Warrior
-                5221008  // Battleship Torpedo
+                5220001  // ELEMENTAL_BOOST
         ));
 
         jobBuffs.put(Job.DAWNWARRIOR1.getId(), Arrays.asList(
-                11001002, // Power Strike
-                11001003  // Slash Blast
+
         ));
 
         jobBuffs.put(Job.DAWNWARRIOR2.getId(), Arrays.asList(
                 11101002, // Final Attack
+                11101001, // Sword booster
                 11101003  // Rage
         ));
 
         jobBuffs.put(Job.DAWNWARRIOR3.getId(), Arrays.asList(
-                11111004, // Brandish
-                11111006  // Soul Driver
+                11111001, // Combo
+                11110005  // Advance Combo
         ));
 
         jobBuffs.put(Job.DAWNWARRIOR4.getId(), Arrays.asList(
-                11121000, // Maple Warrior
-                11121003  // Freeze Standing
+                11121000 // Maple Warrior
+
         ));
 
         jobBuffs.put(Job.BLAZEWIZARD1.getId(), Arrays.asList(
-                12001003, // Magic Claw
-                12001004  // Flame
+                12001002, // MAGIC_ARMOR
+                12001001  // MAGIC_GUARD
         ));
 
         jobBuffs.put(Job.BLAZEWIZARD2.getId(), Arrays.asList(
-                12101002, // Fire Arrow
-                12101006  // Fire Pillar
+                12101000, // MEDITATION
+                12101004  // SPELL_BOOSTER
         ));
 
         jobBuffs.put(Job.BLAZEWIZARD3.getId(), Arrays.asList(
-                12111003, // Meteor Shower
-                12111006  // Fire Strike
+
         ));
 
         jobBuffs.put(Job.BLAZEWIZARD4.getId(), Arrays.asList(
-                12121000, // Maple Warrior
-                12121003  // Ifrit
+                12121000 // Maple Warrior
+
         ));
 
         jobBuffs.put(Job.WINDARCHER1.getId(), Arrays.asList(
-                13001003, // Double Shot
-                13001004  // Storm
+                13001002 // Focus
+
         ));
 
         jobBuffs.put(Job.WINDARCHER2.getId(), Arrays.asList(
-                13101002, // Final Attack
-                13101005  // Storm Break
+                13101001, // BOW_BOOSTER
+                13101003, // Soul of Arrow
+                13101002  // FINAL_ATTACK
         ));
 
         jobBuffs.put(Job.WINDARCHER3.getId(), Arrays.asList(
-                13111002, // Hurricane
-                13111006  // Wind Piercing
+
         ));
 
         jobBuffs.put(Job.WINDARCHER4.getId(), Arrays.asList(
-                13121000, // Maple Warrior
-                13121005  // Eagle Eye
+                13121000 // Maple Warrior
+
         ));
 
         jobBuffs.put(Job.NIGHTWALKER1.getId(), Arrays.asList(
-                14001003, // Dark Sight
-                14001004  // Lucky Seven
+
         ));
 
         jobBuffs.put(Job.NIGHTWALKER2.getId(), Arrays.asList(
                 14101002, // Claw Booster
-                14101004  // Flash Jump
+                14101003  // HASTE
         ));
 
         jobBuffs.put(Job.NIGHTWALKER3.getId(), Arrays.asList(
-                14111002, // Avenger
-                14111006  // Poison Bomb
+                14111000 // SHADOW_PARTNER
+
         ));
 
         jobBuffs.put(Job.NIGHTWALKER4.getId(), Arrays.asList(
-                14121000, // Maple Warrior
-                14121003  // Shadow Stars
+                14121000 // Maple Warrior
+
         ));
 
         jobBuffs.put(Job.THUNDERBREAKER1.getId(), Arrays.asList(
-                15001002, // Somersault Kick
-                15001003  // Dash
+
         ));
 
         jobBuffs.put(Job.THUNDERBREAKER2.getId(), Arrays.asList(
-                15101003, // Corkscrew Blow
-                15101006  // Lightning Charge
+                15101002 // KNUCKLER_BOOSTER
+
         ));
 
         jobBuffs.put(Job.THUNDERBREAKER3.getId(), Arrays.asList(
-                15111004, // Barrage
-                15111007  // Shark Wave
+
         ));
 
         jobBuffs.put(Job.THUNDERBREAKER4.getId(), Arrays.asList(
-                15121000, // Maple Warrior
-                15121003  // Speed Infusion
+                15121000 // Maple Warrior
+
         ));
 
         // Apply buffs for the given job
