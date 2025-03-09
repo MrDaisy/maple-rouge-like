@@ -371,16 +371,17 @@ public class Character extends AbstractCharacterObject {
     public AccountExtraDetails accountExtraDetails;
 
 
-        private List<Integer> jobHistory = new ArrayList<>();
+    private List<Integer> jobHistory = new ArrayList<>();
 
-        public List<Integer> getJobHistory() {
-            return jobHistory;
-        }
+    public List<Integer> getJobHistory() {
+        return new ArrayList<>(jobHistory); // Return a copy to prevent modification
+    }
 
-        public void addJobToHistory(int jobId) {
-            jobHistory.add(jobId);
-        }
-    
+    public void addJobToHistory(int jobId) {
+        jobHistory.add(jobId);
+    }
+
+
     private Character() {
         super.setListener(new AbstractCharacterListener() {
             @Override
