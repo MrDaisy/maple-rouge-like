@@ -23,22 +23,27 @@ public class SellCommand extends Command {
         Character player = c.getPlayer();
 
         if (params.length < 1) {
-            player.yellowMessage("Syntax: @sell <all/equip/use/etc/setup/cash/item> [item_name or sell slot amount]");
+            player.yellowMessage("Syntax: @sell <all/equip/use/etc/setup/cash> [exclude <item_name>]");
             return;
         }
 
         String type = params[0].toLowerCase();
         Shop shop = ShopFactory.getInstance().getShop(1337); // GM Shop
-        int sellSlotAmount = 101;
         String excludeItemName = null;
 
-        // Check for @sellexclude command
-        if (params.length >= 2 && params[0].equalsIgnoreCase("@sellexclude")) {
-            excludeItemName = String.join(" ", Arrays.copyOfRange(params, 1, params.length)).toLowerCase();
+        // Check if the command includes "exclude"
+        if (params.length >= 3 && params[1].equalsIgnoreCase("exclude")) {
+            excludeItemName = String.join(" ", Arrays.copyOfRange(params, 2, params.length)).toLowerCase();
             player.yellowMessage("Excluding item: " + excludeItemName);
+        }
+
+        // If the type is an inventory type, process the command accordingly
+        if (!allTypesAsString.contains(type) && !type.equals("all")) {
+            player.yellowMessage("Error: The specified inventory type '" + type + "' does not exist.");
             return;
         }
 
+        // Process the "item" type to sell specific items by name
         if (type.equals("item")) {
             if (params.length < 2) {
                 player.yellowMessage("Syntax: @sell item <item_name> [amount]");
@@ -51,19 +56,7 @@ public class SellCommand extends Command {
             return;
         }
 
-        if (!allTypesAsString.contains(type)) {
-            player.yellowMessage("Error: The specified inventory type '" + type + "' does not exist.");
-            return;
-        }
-
-        if (params.length >= 2) {
-            try {
-                sellSlotAmount = Integer.parseInt(params[1]);
-            } catch (NumberFormatException e) {
-                player.yellowMessage("Invalid slot amount. Using default value: 101.");
-            }
-        }
-
+        // Handle the case where the "exclude" feature is applied
         boolean isAll = type.equals("all");
 
         for (InventoryType inventoryType : allTypes) {
@@ -80,11 +73,13 @@ public class SellCommand extends Command {
                     Item tempItem = inventory.getItem((byte) i);
                     if (tempItem != null) {
                         String tempItemName = ItemInformationProvider.getInstance().getName(tempItem.getItemId()).toLowerCase();
+
                         // Skip item if it matches the excluded name
                         if (excludeItemName != null && tempItemName.equals(excludeItemName)) {
                             player.yellowMessage("Excluding item: " + tempItemName);
                             continue;
                         }
+
                         player.yellowMessage("Found item: ID " + tempItem.getItemId() + " in slot " + i);
                         shop.sell(c, inventoryType, i, tempItem.getQuantity());
                     }
@@ -96,6 +91,7 @@ public class SellCommand extends Command {
                 }
             }
         }
+
         player.yellowMessage("All applicable inventory items have been sold!");
     }
 
@@ -146,5 +142,5 @@ public class SellCommand extends Command {
     }
 
     private final InventoryType[] allTypes = {InventoryType.EQUIP, InventoryType.USE, InventoryType.ETC, InventoryType.SETUP, InventoryType.CASH};
-    private final Set<String> allTypesAsString = Set.of("equip", "use", "setup", "etc", "cash", "all", "item", "@sellexclude");
+    private final Set<String> allTypesAsString = Set.of("equip", "use", "setup", "etc", "cash", "all", "item");
 }
