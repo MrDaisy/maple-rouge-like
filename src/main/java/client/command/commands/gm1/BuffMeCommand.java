@@ -24,6 +24,11 @@ public class BuffMeCommand extends Command {
             return;
         }
 
+        // Ensure current job is included
+        if (!jobHistory.contains(player.getJob().getId())) {
+            jobHistory.add(player.getJob().getId());
+        }
+
         for (int jobId : jobHistory) {
             applyBuffsForJob(player, jobId);
         }
@@ -376,7 +381,7 @@ public class BuffMeCommand extends Command {
                 15121000 // Maple Warrior
 
         ));
-        // Apply buffs
+// Apply buffs
         if (jobBuffs.containsKey(jobId)) {
             for (int skillId : jobBuffs.get(jobId)) {
                 Skill skill = SkillFactory.getSkill(skillId);
