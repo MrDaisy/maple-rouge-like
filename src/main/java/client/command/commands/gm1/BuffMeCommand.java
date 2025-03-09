@@ -20,7 +20,7 @@ public class BuffMeCommand extends Command {
         List<Integer> jobHistory = player.getJobHistory(); // Ensure this method exists in Character.java
 
         if (jobHistory.isEmpty()) {
-            player.sendMessage("No job history found.");
+            player.sendMessage("You still have not attained any buffs.");
             return;
         }
 
