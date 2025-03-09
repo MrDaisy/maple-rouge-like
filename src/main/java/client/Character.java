@@ -6438,6 +6438,9 @@ public class Character extends AbstractCharacterObject {
     public List<Integer> getJobHistory() {
         return jobHistory;
     }
+    public void sendMessage(String message) {
+        this.getClient().sendPacket(PacketCreator.serverNotice(5, message));
+    }
 
     public synchronized void jobUpdateLogic(int level) {
         if (level % 10 == 0) {

@@ -3,6 +3,7 @@ package client.command.commands.gm1;
 import client.Character;
 import client.Client;
 import client.Job;
+import client.Skill;
 import client.SkillFactory;
 import client.command.Command;
 
@@ -16,12 +17,14 @@ public class BuffMeCommand extends Command {
     @Override
     public void execute(Client c, String[] params) {
         Character player = c.getPlayer();
-        List<Integer> jobHistory = player.getJobHistory(); // Ensure this method is implemented in Character.java
+        List<Integer> jobHistory = player.getJobHistory(); // Ensure this method exists in Character.java
 
-        System.out.println("Job history for " + player.getName() + ": " + jobHistory);
+        if (jobHistory.isEmpty()) {
+            player.sendMessage("No job history found.");
+            return;
+        }
 
         for (int jobId : jobHistory) {
-            System.out.println("Applying buffs for job ID: " + jobId);
             applyBuffsForJob(player, jobId);
         }
     }
@@ -30,126 +33,99 @@ public class BuffMeCommand extends Command {
         Map<Integer, List<Integer>> jobBuffs = new HashMap<>();
 
         // Beginner
-        jobBuffs.put(Job.BEGINNER.getId(), Arrays.asList(
+        jobBuffs.put(0, Arrays.asList(
                 1001, // Recovery
                 1002  // Nimble Feet
         ));
 
-        // Warrior
-        jobBuffs.put(Job.WARRIOR.getId(), Arrays.asList(
+        // Warrior Branch
+        jobBuffs.put(100, Arrays.asList(
                 1000003 // Iron Body
         ));
-
-        // Fighter
-        jobBuffs.put(Job.FIGHTER.getId(), Arrays.asList(
+        jobBuffs.put(110, Arrays.asList(
                 1100006, // Rage
                 1101004, // Sword Booster
                 1101005, // Axe Booster
                 1101007  // Power Guard
         ));
-
-        // Crusader
-        jobBuffs.put(Job.CRUSADER.getId(), Arrays.asList(
-                1111002 // Combo
+        jobBuffs.put(111, Arrays.asList(
+                1111002 // Combo Attack
         ));
-
-        // Hero
-        jobBuffs.put(Job.HERO.getId(), Arrays.asList(
+        jobBuffs.put(112, Arrays.asList(
                 1121000, // Maple Warrior
                 1120003, // Advanced Combo
                 1121011, // Hero's Will
                 1121002  // Stance
         ));
 
-        // Page
-        jobBuffs.put(Job.PAGE.getId(), Arrays.asList(
-                1201004, // Sword Booster
-                1201005, // BW Booster
-                1201007  // Power Guard
-        ));
-
-        // White Knight
-        jobBuffs.put(Job.WHITEKNIGHT.getId(), Arrays.asList(
-                1211009  // Magic Crash
-        ));
-
-        // Paladin
-        jobBuffs.put(Job.PALADIN.getId(), Arrays.asList(
-                1221000, // Maple Warrior
-                1221002, // Stance
-                1221012  // Hero's Will
-        ));
-
-        // Magician
-        jobBuffs.put(Job.MAGICIAN.getId(), Arrays.asList(
+        // Magician Branch
+        jobBuffs.put(200, Arrays.asList(
                 2001002, // Magic Guard
                 2001005  // Magic Claw
         ));
-
-        // FP Wizard
-        jobBuffs.put(Job.FP_WIZARD.getId(), Arrays.asList(
+        jobBuffs.put(210, Arrays.asList(
                 2101001 // Meditation
         ));
-
-        // Bishop
-        jobBuffs.put(Job.BISHOP.getId(), Arrays.asList(
-                2321000, // Maple Warrior
-                2321004, // Infinity
-                2321009, // Hero's Will
-                2321002  // Mana Reflection
+        jobBuffs.put(211, Arrays.asList(
+                2111005 // Spell Booster
+        ));
+        jobBuffs.put(212, Arrays.asList(
+                2121000, // Maple Warrior
+                2121004, // Infinity
+                2121008, // Hero's Will
+                2121002  // Mana Reflection
         ));
 
-        // Thief
-        jobBuffs.put(Job.THIEF.getId(), Arrays.asList(
+        // Bowman Branch
+        jobBuffs.put(300, Arrays.asList(
+        ));
+        jobBuffs.put(310, Arrays.asList(
+                3101002, // Bow Booster
+                3101004  // Soul Arrow
+        ));
+        jobBuffs.put(312, Arrays.asList(
+                3121000, // Maple Warrior
+                3121009, // Hero's Will
+                3121002  // Sharp Eyes
+        ));
+
+        // Thief Branch
+        jobBuffs.put(400, Arrays.asList(
+        ));
+        jobBuffs.put(410, Arrays.asList(
                 4101004, // Haste
                 4101003  // Claw Booster
         ));
-
-        // Hermit
-        jobBuffs.put(Job.HERMIT.getId(), Arrays.asList(
+        jobBuffs.put(411, Arrays.asList(
                 4111002, // Shadow Partner
                 4111001  // Meso Up
         ));
-
-        // Night Lord
-        jobBuffs.put(Job.NIGHTLORD.getId(), Arrays.asList(
+        jobBuffs.put(412, Arrays.asList(
                 4121000, // Maple Warrior
                 4121009  // Hero's Will
         ));
 
-        // Pirate
-        jobBuffs.put(Job.PIRATE.getId(), Arrays.asList(
-                5001001  // Flash Fist
+        // Pirate Branch
+        jobBuffs.put(500, Arrays.asList(
+                5001001 // Flash Fist
         ));
-
-        // Buccaneer
-        jobBuffs.put(Job.BUCCANEER.getId(), Arrays.asList(
+        jobBuffs.put(510, Arrays.asList(
+                5101006 // Knuckle Booster
+        ));
+        jobBuffs.put(512, Arrays.asList(
                 5121000 // Maple Warrior
         ));
 
-        // Thunder Breaker
-        jobBuffs.put(Job.THUNDERBREAKER2.getId(), Arrays.asList(
-                15101002 // Knuckler Booster
-        ));
-
-        jobBuffs.put(Job.THUNDERBREAKER4.getId(), Arrays.asList(
-                15121000 // Maple Warrior
-        ));
-
-        // Apply buffs for the given job
-        if (!jobBuffs.containsKey(jobId)) {
-            System.out.println("No buffs found for job ID: " + jobId);
-            return;
-        }
-
-        for (int skillId : jobBuffs.get(jobId)) {
-            if (SkillFactory.getSkill(skillId) == null) {
-                System.out.println("Skill ID " + skillId + " not found in SkillFactory.");
-                continue;
+        // Apply buffs
+        if (jobBuffs.containsKey(jobId)) {
+            for (int skillId : jobBuffs.get(jobId)) {
+                Skill skill = SkillFactory.getSkill(skillId);
+                if (skill != null) {
+                    skill.getEffect(skill.getMaxLevel()).applyTo(player);
+                }
             }
-
-            System.out.println("Applying skill ID: " + skillId + " to " + player.getName());
-            SkillFactory.getSkill(skillId).getEffect(SkillFactory.getSkill(skillId).getMaxLevel()).applyTo(player);
+        } else {
+            player.sendMessage("No buffs found for job ID: " + jobId);
         }
     }
 }
