@@ -2,7 +2,6 @@ package client.command.commands.gm1;
 
 import client.Character;
 import client.Client;
-import client.Job;
 import client.Skill;
 import client.SkillFactory;
 import client.command.Command;
@@ -29,7 +28,14 @@ public class BuffMeCommand extends Command {
             jobHistory.add(player.getJob().getId());
         }
 
+        // Collect all jobs in the player's advancement path
+        Set<Integer> allJobs = new HashSet<>();
         for (int jobId : jobHistory) {
+            allJobs.addAll(getJobPath(jobId));
+        }
+
+        // Apply buffs from all collected jobs
+        for (int jobId : allJobs) {
             applyBuffsForJob(player, jobId);
         }
     }
@@ -37,12 +43,11 @@ public class BuffMeCommand extends Command {
     private void applyBuffsForJob(Character player, int jobId) {
         Map<Integer, List<Integer>> jobBuffs = new HashMap<>();
 
-        // Beginner
+        // BEGINNER
         jobBuffs.put(0, Arrays.asList(
-
         ));
 
-        /* Warrior Branch
+         /* Warrior Branch
                 WARRIOR(100),
                 FIGHTER(110), CRUSADER(111), HERO(112),
                 PAGE(120), WHITEKNIGHT(121), PALADIN(122),
@@ -381,7 +386,8 @@ public class BuffMeCommand extends Command {
                 15121000 // Maple Warrior
 
         ));
-// Apply buffs
+
+        // Apply buffs
         if (jobBuffs.containsKey(jobId)) {
             for (int skillId : jobBuffs.get(jobId)) {
                 Skill skill = SkillFactory.getSkill(skillId);
@@ -392,5 +398,34 @@ public class BuffMeCommand extends Command {
         } else {
             player.sendMessage("No buffs found for job ID: " + jobId);
         }
+    }
+
+    private List<Integer> getJobPath(int jobId) {
+        Map<Integer, List<Integer>> jobPaths = new HashMap<>();
+
+        jobPaths.put(112, Arrays.asList(111, 110, 100)); // Hero path
+        jobPaths.put(122, Arrays.asList(121, 120, 100)); // Paladin path
+        jobPaths.put(132, Arrays.asList(131, 130, 100)); // Dark Knight path
+
+        jobPaths.put(212, Arrays.asList(211, 210, 200)); // Fire/Poison Mage
+        jobPaths.put(222, Arrays.asList(221, 220, 200)); // Ice/Lightning Mage
+        jobPaths.put(232, Arrays.asList(231, 230, 200)); // Bishop
+
+        jobPaths.put(312, Arrays.asList(311, 310, 300)); // Bowmaster
+        jobPaths.put(322, Arrays.asList(321, 320, 300)); // Marksman
+
+        jobPaths.put(412, Arrays.asList(411, 410, 400)); // Night Lord
+        jobPaths.put(422, Arrays.asList(421, 420, 400)); // Shadower
+
+        jobPaths.put(512, Arrays.asList(511, 510, 500)); // Buccaneer
+        jobPaths.put(522, Arrays.asList(521, 520, 500)); // Corsair
+
+        jobPaths.put(1512, Arrays.asList(1511, 1510, 1500, 1000)); // Thunder Breaker
+        jobPaths.put(1412, Arrays.asList(1411, 1410, 1400, 1000)); // Night Walker
+        jobPaths.put(1312, Arrays.asList(1311, 1310, 1300, 1000)); // Wind Archer
+        jobPaths.put(1212, Arrays.asList(1211, 1210, 1200, 1000)); // Blaze Wizard
+        jobPaths.put(1112, Arrays.asList(1111, 1110, 1100, 1000)); // Dawn Warrior
+
+        return jobPaths.getOrDefault(jobId, Collections.singletonList(jobId));
     }
 }
