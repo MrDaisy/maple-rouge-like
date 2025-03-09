@@ -370,16 +370,7 @@ public class Character extends AbstractCharacterObject {
     private long usedPotionTime = System.currentTimeMillis();
     public AccountExtraDetails accountExtraDetails;
 
-    // Other fields...
-    private List<Integer> jobHistory = new ArrayList<>();
 
-    public List<Integer> getJobHistory() {
-        return jobHistory;
-    }
-
-    public void addToJobHistory(int jobId) {
-        this.jobHistory.add(jobId);
-    }
     private Character() {
         super.setListener(new AbstractCharacterListener() {
             @Override
