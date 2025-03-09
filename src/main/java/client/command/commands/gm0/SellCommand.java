@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class SellCommand extends Command {
     {
-        setDescription("Sells all items in an inventory tab or a specific item by name.");
+        setDescription("Sells all items in an inventory tab or a specific item by name, with optional exclusion.");
     }
 
     @Override
@@ -30,6 +30,14 @@ public class SellCommand extends Command {
         String type = params[0].toLowerCase();
         Shop shop = ShopFactory.getInstance().getShop(1337); // GM Shop
         int sellSlotAmount = 101;
+        String excludeItemName = null;
+
+        // Check for @sellexclude command
+        if (params.length >= 2 && params[0].equalsIgnoreCase("@sellexclude")) {
+            excludeItemName = String.join(" ", Arrays.copyOfRange(params, 1, params.length)).toLowerCase();
+            player.yellowMessage("Excluding item: " + excludeItemName);
+            return;
+        }
 
         if (type.equals("item")) {
             if (params.length < 2) {
@@ -39,7 +47,7 @@ public class SellCommand extends Command {
 
             String itemName = String.join(" ", Arrays.copyOfRange(params, 1, params.length - 1)).toLowerCase();
             int amount = params.length > 2 ? Integer.parseInt(params[params.length - 1]) : 0; // Amount can be passed after item name
-            sellItemByName(c, shop, player, itemName, amount);
+            sellItemByName(c, shop, player, itemName, amount, excludeItemName);
             return;
         }
 
@@ -71,6 +79,12 @@ public class SellCommand extends Command {
                 for (short i = 0; i < inventory.getSlotLimit(); i++) {
                     Item tempItem = inventory.getItem((byte) i);
                     if (tempItem != null) {
+                        String tempItemName = ItemInformationProvider.getInstance().getName(tempItem.getItemId()).toLowerCase();
+                        // Skip item if it matches the excluded name
+                        if (excludeItemName != null && tempItemName.equals(excludeItemName)) {
+                            player.yellowMessage("Excluding item: " + tempItemName);
+                            continue;
+                        }
                         player.yellowMessage("Found item: ID " + tempItem.getItemId() + " in slot " + i);
                         shop.sell(c, inventoryType, i, tempItem.getQuantity());
                     }
@@ -85,7 +99,7 @@ public class SellCommand extends Command {
         player.yellowMessage("All applicable inventory items have been sold!");
     }
 
-    private void sellItemByName(Client c, Shop shop, Character player, String itemName, int amount) {
+    private void sellItemByName(Client c, Shop shop, Character player, String itemName, int amount, String excludeItemName) {
         ItemInformationProvider itemInfoProvider = ItemInformationProvider.getInstance();
         boolean itemFound = false;
 
@@ -99,26 +113,27 @@ public class SellCommand extends Command {
             for (byte i = 0; i < inventory.getSlotLimit(); i++) {
                 Item tempItem = inventory.getItem(i);
                 if (tempItem != null) {
-                    String tempItemName = itemInfoProvider.getName(tempItem.getItemId());
+                    String tempItemName = itemInfoProvider.getName(tempItem.getItemId()).toLowerCase();
 
-                    if (tempItemName != null) {
-                        String lowerCaseTempItemName = tempItemName.toLowerCase();
+                    // Skip item if it matches the excluded name
+                    if (excludeItemName != null && tempItemName.equals(excludeItemName)) {
+                        player.yellowMessage("Excluding item: " + tempItemName);
+                        continue;
+                    }
 
-                        // Compare item names without considering case
-                        if (lowerCaseTempItemName.equals(lowerCaseItemName)) {
-                            short quantityInStack = tempItem.getQuantity();
-                            short quantityToSell = (short) Math.min(amount, quantityInStack); // Cast to short to avoid type issue
+                    if (tempItemName.equals(lowerCaseItemName)) {
+                        short quantityInStack = tempItem.getQuantity();
+                        short quantityToSell = (short) Math.min(amount, quantityInStack); // Cast to short to avoid type issue
 
-                            player.yellowMessage("Selling " + quantityToSell + " of " + tempItemName);
-                            shop.sell(c, inventoryType, i, quantityToSell);
+                        player.yellowMessage("Selling " + quantityToSell + " of " + tempItemName);
+                        shop.sell(c, inventoryType, i, quantityToSell);
 
-                            amount -= quantityToSell; // Decrease the remaining amount to sell
-                            itemFound = true;
+                        amount -= quantityToSell; // Decrease the remaining amount to sell
+                        itemFound = true;
 
-                            if (amount <= 0) {
-                                player.yellowMessage("Sold " + itemName + "!");
-                                return;
-                            }
+                        if (amount <= 0) {
+                            player.yellowMessage("Sold " + itemName + "!");
+                            return;
                         }
                     }
                 }
@@ -131,5 +146,5 @@ public class SellCommand extends Command {
     }
 
     private final InventoryType[] allTypes = {InventoryType.EQUIP, InventoryType.USE, InventoryType.ETC, InventoryType.SETUP, InventoryType.CASH};
-    private final Set<String> allTypesAsString = Set.of("equip", "use", "setup", "etc", "cash", "all", "item");
+    private final Set<String> allTypesAsString = Set.of("equip", "use", "setup", "etc", "cash", "all", "item", "@sellexclude");
 }
