@@ -34,41 +34,92 @@ public class BuffMeCommand extends Command {
 
         // Beginner
         jobBuffs.put(0, Arrays.asList(
-                1001, // Recovery
-                1002  // Nimble Feet
+
         ));
 
-        // Warrior Branch
+        /* Warrior Branch
+                WARRIOR(100),
+                FIGHTER(110), CRUSADER(111), HERO(112),
+                PAGE(120), WHITEKNIGHT(121), PALADIN(122),
+                SPEARMAN(130), DRAGONKNIGHT(131), DARKKNIGHT(132),*/
+
+        // Warrior
         jobBuffs.put(100, Arrays.asList(
                 1000003 // Iron Body
         ));
+        //Fighter
         jobBuffs.put(110, Arrays.asList(
                 1100006, // Rage
                 1101004, // Sword Booster
                 1101005, // Axe Booster
                 1101007  // Power Guard
         ));
+        //CRUSADER
         jobBuffs.put(111, Arrays.asList(
                 1111002 // Combo Attack
         ));
+        //HERO
         jobBuffs.put(112, Arrays.asList(
                 1121000, // Maple Warrior
                 1120003, // Advanced Combo
                 1121011, // Hero's Will
                 1121002  // Stance
         ));
-
-        // Magician Branch
-        jobBuffs.put(200, Arrays.asList(
-                2001002, // Magic Guard
-                2001005  // Magic Claw
+        //PAGE
+        jobBuffs.put(120, Arrays.asList(
+                1201004, // Sword booster
+                1201005, // BW booster
+                1201007  // Power Guard
         ));
+        //WHITEKNIGHT
+        jobBuffs.put(121, Arrays.asList(
+                1211009  // Magic Crash
+        ));
+        //PALADIN
+        jobBuffs.put(122, Arrays.asList(
+                1221000, // Maple Warrior
+                1221002, // stance
+                1221012 // heros will
+        ));
+        //SPEARMAN
+        jobBuffs.put(130, Arrays.asList(
+                1301006, // Iron Will
+                1301004, // Spear booster
+                1301005, // polearm booster
+                1301007  // Hyper Body
+        ));
+        //DRAGONKNIGHT
+        jobBuffs.put(131, Arrays.asList(
+                1311005, // Sacrifice
+                1311008  // Dragon Blood
+        ));
+        //DARKKNIGHT
+        jobBuffs.put(132, Arrays.asList(
+                1321000, // Maple Warrior
+                1320006, // berserk
+                1321002, // Stance
+                1321010  // heros will
+        ));
+
+     /*   Magician Branch
+                MAGICIAN(200),
+                FP_WIZARD(210), FP_MAGE(211), FP_ARCHMAGE(212),
+                IL_WIZARD(220), IL_MAGE(221), IL_ARCHMAGE(222),
+                CLERIC(230), PRIEST(231), BISHOP(232),*/
+
+        // Magician
+        jobBuffs.put(200, Arrays.asList(
+                2001002 // Magic Guard
+        ));
+        //FP_WIZARD
         jobBuffs.put(210, Arrays.asList(
                 2101001 // Meditation
         ));
+        //FP_MAGE
         jobBuffs.put(211, Arrays.asList(
                 2111005 // Spell Booster
         ));
+        //FP_ARCHMAGE
         jobBuffs.put(212, Arrays.asList(
                 2121000, // Maple Warrior
                 2121004, // Infinity
