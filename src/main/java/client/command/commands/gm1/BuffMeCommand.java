@@ -150,17 +150,17 @@ public class BuffMeCommand extends Command {
 
         jobBuffs.put(Job.HUNTER.getId(), Arrays.asList(
                 3101002, // Bow Booster
-                3101005  // Arrow Bomb
+                3101004  // SOUL_ARROW
         ));
 
         jobBuffs.put(Job.RANGER.getId(), Arrays.asList(
-                3111004, // Arrow Rain
-                3111005  // Silver Hawk
+
         ));
 
         jobBuffs.put(Job.BOWMASTER.getId(), Arrays.asList(
                 3121000, // Maple Warrior
-                3121004  // Hurricane
+                3121009, // Heros will
+                3121002  // SHARP_EYES
         ));
 
         jobBuffs.put(Job.CROSSBOWMAN.getId(), Arrays.asList(
@@ -169,48 +169,45 @@ public class BuffMeCommand extends Command {
         ));
 
         jobBuffs.put(Job.SNIPER.getId(), Arrays.asList(
-                3211004, // Arrow Eruption
-                3211005  // Golden Eagle
+
         ));
 
         jobBuffs.put(Job.MARKSMAN.getId(), Arrays.asList(
                 3221000, // Maple Warrior
-                3221007  // Snipe
+                3221008  // Heros will
         ));
 
         jobBuffs.put(Job.THIEF.getId(), Arrays.asList(
-                4001003, // Dark Sight
-                4001334  // Double Stab
+
         ));
 
         jobBuffs.put(Job.ASSASSIN.getId(), Arrays.asList(
                 4101004, // Haste
-                4101005  // Drain
+                4101003  // CLAW_BOOSTER
         ));
 
         jobBuffs.put(Job.HERMIT.getId(), Arrays.asList(
                 4111002, // Shadow Partner
-                4111006  // Flash Jump
+                4111001  // MESO_UP
         ));
 
         jobBuffs.put(Job.NIGHTLORD.getId(), Arrays.asList(
                 4121000, // Maple Warrior
-                4121008  // Ninja Storm
+                4121009  // HEROS_WILL
         ));
 
         jobBuffs.put(Job.BANDIT.getId(), Arrays.asList(
-                4201003, // Haste
-                4201005  // Savage Blow
+                4201003 // Haste
         ));
 
         jobBuffs.put(Job.CHIEFBANDIT.getId(), Arrays.asList(
-                4211004, // Band of Thieves
-                4211006  // Meso Explosion
+                4211005 // MESO_GUARD
+
         ));
 
         jobBuffs.put(Job.SHADOWER.getId(), Arrays.asList(
                 4221000, // Maple Warrior
-                4221007  // Boomerang Step
+                4221008  // HEROS_WILL
         ));
 
         jobBuffs.put(Job.PIRATE.getId(), Arrays.asList(
