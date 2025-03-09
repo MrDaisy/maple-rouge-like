@@ -37,42 +37,47 @@ public class BuffMeCommand extends Command {
         ));
 
         jobBuffs.put(Job.WARRIOR.getId(), Arrays.asList(
-                1000003, // Iron Body
-                1000004  // Power Strike
+                1000003 // Iron Body
         ));
 
         jobBuffs.put(Job.FIGHTER.getId(), Arrays.asList(
                 1100006, // Rage
+                1101004, // Sword Booster
+                1101005, // Axe booster
                 1101007  // Power Guard
         ));
 
         jobBuffs.put(Job.CRUSADER.getId(), Arrays.asList(
-                1111002, // Combo
-                1111008  // Shout
+                1111002 // Combo
         ));
 
         jobBuffs.put(Job.HERO.getId(), Arrays.asList(
                 1121000, // Maple Warrior
-                1121006  // Rush
+                1120003, // Advanced Combo
+                1121011, // Heros will
+                1121002  // Stance
         ));
 
         jobBuffs.put(Job.PAGE.getId(), Arrays.asList(
-                1201006, // Threaten
+                1201004, // Sword booster
+                1201005, // BW booster
                 1201007  // Power Guard
         ));
 
         jobBuffs.put(Job.WHITEKNIGHT.getId(), Arrays.asList(
-                1211002, // Charge Blow
                 1211009  // Magic Crash
         ));
 
         jobBuffs.put(Job.PALADIN.getId(), Arrays.asList(
                 1221000, // Maple Warrior
-                1221007  // Rush
+                1221002,  // stance
+                1221012 // heros will
         ));
 
         jobBuffs.put(Job.SPEARMAN.getId(), Arrays.asList(
                 1301006, // Iron Will
+                1301004, // Spear booster
+                1301005, // polearm booster
                 1301007  // Hyper Body
         ));
 
@@ -83,7 +88,9 @@ public class BuffMeCommand extends Command {
 
         jobBuffs.put(Job.DARKKNIGHT.getId(), Arrays.asList(
                 1321000, // Maple Warrior
-                1321007  // Beholder
+                1320006, // berserk
+                1321002, // Stance
+                1321010  // heros will
         ));
 
         jobBuffs.put(Job.MAGICIAN.getId(), Arrays.asList(
@@ -92,53 +99,53 @@ public class BuffMeCommand extends Command {
         ));
 
         jobBuffs.put(Job.FP_WIZARD.getId(), Arrays.asList(
-                2101004, // Fire Arrow
-                2101005  // Poison Breath
+                2101001 // MEDITATION
         ));
 
         jobBuffs.put(Job.FP_MAGE.getId(), Arrays.asList(
-                2111002, // Explosion
-                2111003  // Poison Mist
+                2111005 // Spell booster
         ));
 
         jobBuffs.put(Job.FP_ARCHMAGE.getId(), Arrays.asList(
                 2121000, // Maple Warrior
-                2121007  // Meteor Shower
+                2121004, // Infinity
+                2121008, // heros will
+                2121002  // MANA_REFLECTION
         ));
 
         jobBuffs.put(Job.IL_WIZARD.getId(), Arrays.asList(
-                2201004, // Cold Beam
-                2201005  // Thunderbolt
+                2201001 // MEDITATION
         ));
 
         jobBuffs.put(Job.IL_MAGE.getId(), Arrays.asList(
-                2211002, // Ice Strike
-                2211003  // Thunder Spear
+                2211005 // SPELL_BOOSTER
         ));
 
         jobBuffs.put(Job.IL_ARCHMAGE.getId(), Arrays.asList(
                 2221000, // Maple Warrior
-                2221007  // Blizzard
+                2221004, // infinity
+                2221008, // heros will
+                2221002  // MANA_REFLECTION
         ));
 
         jobBuffs.put(Job.CLERIC.getId(), Arrays.asList(
-                2301002, // Heal
+                2301003, // INVINCIBLE
                 2301004  // Bless
         ));
 
         jobBuffs.put(Job.PRIEST.getId(), Arrays.asList(
-                2311003, // Holy Symbol
-                2311005  // Doom
+                2311003 // Holy Symbol
         ));
 
         jobBuffs.put(Job.BISHOP.getId(), Arrays.asList(
                 2321000, // Maple Warrior
-                2321008  // Genesis
+                2321004, // infinity
+                2321009, // Heros will
+                2321002  // MANA_REFLECTION
         ));
 
         jobBuffs.put(Job.BOWMAN.getId(), Arrays.asList(
-                3000001, // Critical Shot
-                3001003  // Focus
+
         ));
 
         jobBuffs.put(Job.HUNTER.getId(), Arrays.asList(
