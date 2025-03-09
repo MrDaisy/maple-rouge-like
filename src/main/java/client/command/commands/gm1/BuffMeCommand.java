@@ -234,7 +234,13 @@ public class BuffMeCommand extends Command {
                 4221008  // HEROS_WILL
         ));
 
-        // Pirate Branch
+        /*// Pirate Branch
+         PIRATE(500),
+        BRAWLER(510), MARAUDER(511), BUCCANEER(512),
+        GUNSLINGER(520), OUTLAW(521), CORSAIR(522),
+        */
+
+        // Pirate
         jobBuffs.put(500, Arrays.asList(
                 5001001 // Flash Fist
         ));
