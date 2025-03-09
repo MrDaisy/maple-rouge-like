@@ -70,7 +70,7 @@ public class BuffMeCommand extends Command {
 
         jobBuffs.put(Job.PALADIN.getId(), Arrays.asList(
                 1221000, // Maple Warrior
-                1221002,  // stance
+                1221002, // stance
                 1221012 // heros will
         ));
 
