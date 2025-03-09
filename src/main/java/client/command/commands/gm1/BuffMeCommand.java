@@ -401,6 +401,23 @@ public class BuffMeCommand extends Command {
     }
 
     private List<Integer> getJobPath(int jobId) {
+        List<Integer> path = new ArrayList<>();
+
+        // Traverse backwards by removing the last digit(s)
+        while (jobId >= 100) {
+            path.add(jobId);
+            if (jobId < 1000) {
+                jobId /= 10; // First to fourth job advancements (e.g., 112 -> 11)
+            } else {
+                jobId /= 100; // Cygnus Knights (e.g., 1512 -> 15)
+            }
+        }
+
+        return path;
+    }
+}
+/*
+    private List<Integer> getJobPath(int jobId) {
         Map<Integer, List<Integer>> jobPaths = new HashMap<>();
 
         jobPaths.put(112, Arrays.asList(111, 110, 100)); // Hero path
@@ -429,3 +446,4 @@ public class BuffMeCommand extends Command {
         return jobPaths.getOrDefault(jobId, Collections.singletonList(jobId));
     }
 }
+*/
