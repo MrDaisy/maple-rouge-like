@@ -403,19 +403,25 @@ public class BuffMeCommand extends Command {
     private List<Integer> getJobPath(int jobId) {
         List<Integer> path = new ArrayList<>();
 
-        // Traverse backwards by removing the last digit(s)
+        // Traverse backwards, adding job IDs to the path
         while (jobId >= 100) {
             path.add(jobId);
-            if (jobId < 1000) {
-                jobId /= 10; // First to fourth job advancements (e.g., 112 -> 11)
+
+            // Check for Cygnus Knights or other special cases
+            if (jobId >= 1000) {
+                jobId /= 100; // Cygnus Knights (e.g., 1512 → 151 → 15 → 1)
             } else {
-                jobId /= 100; // Cygnus Knights (e.g., 1512 -> 15)
+                jobId /= 10; // Regular advancements (e.g., 112 → 11 → 10 → 1)
             }
+        }
+
+        // Ensure the path includes at least the previous tier if it doesn't reach the lowest tier
+        if (!path.contains(0) && !path.contains(1)) {
+            path.add(0); // Register as beginner job if needed
         }
 
         return path;
     }
-}
 /*
     private List<Integer> getJobPath(int jobId) {
         Map<Integer, List<Integer>> jobPaths = new HashMap<>();
