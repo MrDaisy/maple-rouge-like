@@ -126,34 +126,112 @@ public class BuffMeCommand extends Command {
                 2121008, // Hero's Will
                 2121002  // Mana Reflection
         ));
+        //IL_WIZARD
+        jobBuffs.put(220, Arrays.asList(
+                2201001 // MEDITATION
+        ));
+        //IL_MAGE
+        jobBuffs.put(221, Arrays.asList(
+                2211005 // SPELL_BOOSTER
+        ));
+        //IL_ARCHMAGE
+        jobBuffs.put(222, Arrays.asList(
+                2221000, // Maple Warrior
+                2221004, // infinity
+                2221008, // heros will
+                2221002  // MANA_REFLECTION
+        ));
+        //CLERIC
+        jobBuffs.put(230, Arrays.asList(
+                2301003, // INVINCIBLE
+                2301004  // Bless
+        ));
+        //PRIEST
+        jobBuffs.put(231, Arrays.asList(
+                2311003 // Holy Symbol
+        ));
+        //BISHOP
+        jobBuffs.put(232, Arrays.asList(
+                2321000, // Maple Warrior
+                2321004, // infinity
+                2321009, // Heros will
+                2321002  // MANA_REFLECTION
+        ));
 
-        // Bowman Branch
+
+       /*  Bowman Branch
+       BOWMAN(300),
+        HUNTER(310), RANGER(311), BOWMASTER(312),
+        CROSSBOWMAN(320), SNIPER(321), MARKSMAN(322),*/
+
+        //Bowman
         jobBuffs.put(300, Arrays.asList(
         ));
+        //HUNTER
         jobBuffs.put(310, Arrays.asList(
                 3101002, // Bow Booster
-                3101004  // Soul Arrow
+                3101004  // SOUL_ARROW
         ));
+        //RANGER
+        jobBuffs.put(311, Arrays.asList(
+
+        ));
+        //BOWMASTER
         jobBuffs.put(312, Arrays.asList(
                 3121000, // Maple Warrior
-                3121009, // Hero's Will
-                3121002  // Sharp Eyes
+                3121009, // Heros will
+                3121002  // SHARP_EYES
+        ));
+        //CROSSBOWMAN
+        jobBuffs.put(320, Arrays.asList(
+                3201002, // Crossbow Booster
+                3201004  // Soul Arrow
+        ));
+        //SNIPER
+        jobBuffs.put(321, Arrays.asList(
+
+        ));
+        //MARKSMAN
+        jobBuffs.put(322, Arrays.asList(
+                3221000, // Maple Warrior
+                3221008  // Heros will
         ));
 
         // Thief Branch
+/*  THIEF(400),
+    ASSASSIN(410), HERMIT(411), NIGHTLORD(412),
+    BANDIT(420), CHIEFBANDIT(421), SHADOWER(422),*/
+
+        // Thief
         jobBuffs.put(400, Arrays.asList(
         ));
+        // ASSASSIN
         jobBuffs.put(410, Arrays.asList(
                 4101004, // Haste
                 4101003  // Claw Booster
         ));
+        // HERMIT
         jobBuffs.put(411, Arrays.asList(
                 4111002, // Shadow Partner
                 4111001  // Meso Up
         ));
+        // NIGHTLORD
         jobBuffs.put(412, Arrays.asList(
                 4121000, // Maple Warrior
                 4121009  // Hero's Will
+        ));
+        // BANDIT
+        jobBuffs.put(420, Arrays.asList(
+                4201003  // Haste
+        ));
+        // CHIEFBANDIT
+        jobBuffs.put(421, Arrays.asList(
+                4211005 // MESO_GUARD
+        ));
+        // SHADOWER
+        jobBuffs.put(422, Arrays.asList(
+                4221000, // Maple Warrior
+                4221008  // HEROS_WILL
         ));
 
         // Pirate Branch
