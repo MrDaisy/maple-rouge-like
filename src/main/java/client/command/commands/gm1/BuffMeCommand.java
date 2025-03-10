@@ -400,57 +400,123 @@ public class BuffMeCommand extends Command {
         }
     }
 
-    private List<Integer> getJobPath(int jobId) {
-        List<Integer> path = new ArrayList<>();
+    /*
+        private List<Integer> getJobPath(int jobId) {
+            List<Integer> path = new ArrayList<>();
 
-        // Traverse backwards, adding job IDs to the path
-        while (jobId >= 100) {
-            path.add(jobId);
+            // Traverse backwards, adding job IDs to the path
+            while (jobId >= 100) {
+                path.add(jobId);
 
-            // Check for Cygnus Knights or other special cases
-            if (jobId >= 1000) {
-                jobId /= 100; // Cygnus Knights (e.g., 1512 → 151 → 15 → 1)
-            } else {
-                jobId /= 10; // Regular advancements (e.g., 112 → 11 → 10 → 1)
+                // Check for Cygnus Knights or other special cases
+                if (jobId >= 1000) {
+                    jobId /= 100; // Cygnus Knights (e.g., 1512 → 151 → 15 → 1)
+                } else {
+                    jobId /= 10; // Regular advancements (e.g., 112 → 11 → 10 → 1)
+                }
             }
-        }
 
-        // Ensure the path includes at least the previous tier if it doesn't reach the lowest tier
-        if (!path.contains(0) && !path.contains(1)) {
-            path.add(0); // Register as beginner job if needed
-        }
+            // Ensure the path includes at least the previous tier if it doesn't reach the lowest tier
+            if (!path.contains(0) && !path.contains(1)) {
+                path.add(0); // Register as beginner job if needed
+            }
 
-        return path;
-    }
-}
-/*
+            return path;
+        }
+    }*/
     private List<Integer> getJobPath(int jobId) {
         Map<Integer, List<Integer>> jobPaths = new HashMap<>();
 
-        jobPaths.put(112, Arrays.asList(111, 110, 100)); // Hero path
-        jobPaths.put(122, Arrays.asList(121, 120, 100)); // Paladin path
-        jobPaths.put(132, Arrays.asList(131, 130, 100)); // Dark Knight path
+        // Define full job paths
+        jobPaths.put(112, Arrays.asList(111, 110, 100)); // Hero
+        jobPaths.put(111, Arrays.asList(110, 100));
+        jobPaths.put(110, Arrays.asList(100));
+
+        jobPaths.put(122, Arrays.asList(121, 120, 100)); // Paladin
+        jobPaths.put(121, Arrays.asList(120, 100));
+        jobPaths.put(120, Arrays.asList(100));
+
+        jobPaths.put(132, Arrays.asList(131, 130, 100)); // Dark Knight
+        jobPaths.put(131, Arrays.asList(130, 100));
+        jobPaths.put(130, Arrays.asList(100));
 
         jobPaths.put(212, Arrays.asList(211, 210, 200)); // Fire/Poison Mage
+        jobPaths.put(211, Arrays.asList(210, 200));
+        jobPaths.put(210, Arrays.asList(200));
+
         jobPaths.put(222, Arrays.asList(221, 220, 200)); // Ice/Lightning Mage
+        jobPaths.put(221, Arrays.asList(220, 200));
+        jobPaths.put(220, Arrays.asList(200));
+
         jobPaths.put(232, Arrays.asList(231, 230, 200)); // Bishop
+        jobPaths.put(231, Arrays.asList(230, 200));
+        jobPaths.put(230, Arrays.asList(200));
 
         jobPaths.put(312, Arrays.asList(311, 310, 300)); // Bowmaster
+        jobPaths.put(311, Arrays.asList(310, 300));
+        jobPaths.put(310, Arrays.asList(300));
+
         jobPaths.put(322, Arrays.asList(321, 320, 300)); // Marksman
+        jobPaths.put(321, Arrays.asList(320, 300));
+        jobPaths.put(320, Arrays.asList(300));
 
         jobPaths.put(412, Arrays.asList(411, 410, 400)); // Night Lord
+        jobPaths.put(411, Arrays.asList(410, 400));
+        jobPaths.put(410, Arrays.asList(400));
+
         jobPaths.put(422, Arrays.asList(421, 420, 400)); // Shadower
+        jobPaths.put(421, Arrays.asList(420, 400));
+        jobPaths.put(420, Arrays.asList(400));
 
         jobPaths.put(512, Arrays.asList(511, 510, 500)); // Buccaneer
+        jobPaths.put(511, Arrays.asList(510, 500));
+        jobPaths.put(510, Arrays.asList(500));
+
         jobPaths.put(522, Arrays.asList(521, 520, 500)); // Corsair
+        jobPaths.put(521, Arrays.asList(520, 500));
+        jobPaths.put(520, Arrays.asList(500));
 
+        // Cygnus Knights
         jobPaths.put(1512, Arrays.asList(1511, 1510, 1500, 1000)); // Thunder Breaker
-        jobPaths.put(1412, Arrays.asList(1411, 1410, 1400, 1000)); // Night Walker
-        jobPaths.put(1312, Arrays.asList(1311, 1310, 1300, 1000)); // Wind Archer
-        jobPaths.put(1212, Arrays.asList(1211, 1210, 1200, 1000)); // Blaze Wizard
-        jobPaths.put(1112, Arrays.asList(1111, 1110, 1100, 1000)); // Dawn Warrior
+        jobPaths.put(1511, Arrays.asList(1510, 1500, 1000));
+        jobPaths.put(1510, Arrays.asList(1500, 1000));
+        jobPaths.put(1500, Arrays.asList(1000));
 
-        return jobPaths.getOrDefault(jobId, Collections.singletonList(jobId));
+        jobPaths.put(1412, Arrays.asList(1411, 1410, 1400, 1000)); // Night Walker
+        jobPaths.put(1411, Arrays.asList(1410, 1400, 1000));
+        jobPaths.put(1410, Arrays.asList(1400, 1000));
+        jobPaths.put(1400, Arrays.asList(1000));
+
+        jobPaths.put(1312, Arrays.asList(1311, 1310, 1300, 1000)); // Wind Archer
+        jobPaths.put(1311, Arrays.asList(1310, 1300, 1000));
+        jobPaths.put(1310, Arrays.asList(1300, 1000));
+        jobPaths.put(1300, Arrays.asList(1000));
+
+        jobPaths.put(1212, Arrays.asList(1211, 1210, 1200, 1000)); // Blaze Wizard
+        jobPaths.put(1211, Arrays.asList(1210, 1200, 1000));
+        jobPaths.put(1210, Arrays.asList(1200, 1000));
+        jobPaths.put(1200, Arrays.asList(1000));
+
+        jobPaths.put(1112, Arrays.asList(1111, 1110, 1100, 1000)); // Dawn Warrior
+        jobPaths.put(1111, Arrays.asList(1110, 1100, 1000));
+        jobPaths.put(1110, Arrays.asList(1100, 1000));
+        jobPaths.put(1100, Arrays.asList(1000));
+
+        // Dynamically construct full path
+        List<Integer> fullPath = new ArrayList<>();
+        int currentJob = jobId;
+
+        // Traverse backwards through the job path until we reach the base job
+        while (jobPaths.containsKey(currentJob)) {
+            fullPath.add(currentJob);
+            List<Integer> previousJobs = jobPaths.get(currentJob);
+            if (previousJobs.isEmpty()) break;
+            currentJob = previousJobs.get(0); // Always take the first (previous) job
+        }
+
+        // Add the final base job
+        fullPath.add(currentJob);
+
+        return fullPath;
     }
 }
-*/
