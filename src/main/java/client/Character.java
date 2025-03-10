@@ -6433,6 +6433,9 @@ public class Character extends AbstractCharacterObject {
             this.addMaxMP(1000);
         }
     }
+    /*JOB history for @buffme is stored below here.
+    * @buffmecommand.java job path and logic
+    * */
     private List<Integer> jobHistory = new ArrayList<>();
 
     public List<Integer> getJobHistory() {
@@ -6501,7 +6504,9 @@ public class Character extends AbstractCharacterObject {
         // Send the stat update packet to the client
         sendPacket(PacketCreator.updatePlayerStats(stats, true, this)); // 'true' enables actions after update
     }
-
+    /*JOB history for @buffme is stored up here.
+     * @buffmecommand.java job path and logic
+     * */
 
     public synchronized void checkAchievements(int level)
     {
