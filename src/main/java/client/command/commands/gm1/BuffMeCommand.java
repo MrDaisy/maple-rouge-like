@@ -11,6 +11,7 @@ import java.util.*;
 public class BuffMeCommand extends Command {
     {
         setDescription("Activate buffs based on the player's job history.");
+
     }
 
     @Override
