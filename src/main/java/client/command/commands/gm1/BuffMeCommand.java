@@ -495,3 +495,17 @@ public class BuffMeCommand extends Command {
         return fullPath;
     }
 }
+/*
+* How This Works
+🔹 If a player gets 112 (Hero) → They automatically get [112, 111, 110, 100].
+🔹 If a player gets 111 (3rd job) → They automatically get [111, 110, 100].
+🔹 If a player gets 110 (2nd job) → They automatically get [110, 100].
+🔹 If a player gets 100 (1st job) → They only get [100].
+🔹 The same logic applies to all other classes.
+
+Why This Is Better
+✅ Dynamic Traversal → Instead of hardcoding long lists, it dynamically finds all previous jobs.
+✅ Works for Any Job Advancement → Handles cases where players are at any stage in their job path.
+✅ Supports Future Expansions → If new jobs are added, you just add them to jobPaths, and the traversal logic still works.
+*
+* */
