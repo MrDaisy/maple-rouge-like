@@ -415,7 +415,7 @@ public class BuffMeCommand extends Command {
         }
     }
     private List<Integer> getJobPath(int jobId) {
-        Map<Integer, List<Integer>> jobPaths = new HashMap
+        Map<Integer, List<Integer>> jobPaths = new HashMap<>();
 
         // Define full job paths
         jobPaths.put(112, Arrays.asList(111, 110, 100)); // Hero
