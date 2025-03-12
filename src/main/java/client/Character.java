@@ -6453,24 +6453,31 @@ public class Character extends AbstractCharacterObject {
     // Method to load job history from the database
     public void loadJobHistory() {
         try (Connection con = DatabaseConnection.getConnection()) {
+            System.out.println("Connecting to database to load job history for character ID: " + this.getId());
             PreparedStatement ps = con.prepareStatement("SELECT JobHistory FROM Character WHERE id = ?");
             ps.setInt(1, this.getId()); // Assuming getId() returns the character's ID
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 String jobHistoryStr = rs.getString("JobHistory");
-                jobHistory = Arrays.asList(jobHistoryStr.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
-                System.out.println("Loaded job history from database: " + jobHistory);
+                if (jobHistoryStr != null && !jobHistoryStr.isEmpty()) {
+                    jobHistory = Arrays.asList(jobHistoryStr.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
+                    System.out.println("Loaded job history from database: " + jobHistory);
+                } else {
+                    jobHistory = new ArrayList<>(); // Initialize jobHistory if no data found
+                    System.out.println("Job history is empty in database, initializing new job history.");
+                }
             } else {
                 jobHistory = new ArrayList<>(); // Initialize jobHistory if no data found
-                System.out.println("No job history found, initializing new job history.");
+                System.out.println("No job history found for character ID: " + this.getId() + ", initializing new job history.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
             jobHistory = new ArrayList<>(); // Initialize jobHistory in case of an error
-            System.out.println("Error loading job history, initializing new job history.");
+            System.out.println("Error loading job history for character ID: " + this.getId() + ", initializing new job history.");
         }
     }
+
 
 
     // Method to save job history to the database
