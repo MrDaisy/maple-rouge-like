@@ -21,6 +21,11 @@ public class BuffMeCommand extends Command {
 
         List<Integer> jobHistory = player.getJobHistory();
 
+        if (jobHistory == null) {
+            player.sendMessage("Job history is null.");
+            jobHistory = new ArrayList<>();
+        }
+
         if (jobHistory.isEmpty()) {
             player.sendMessage("You still have not attained any buffs.");
             return;
@@ -28,6 +33,7 @@ public class BuffMeCommand extends Command {
 
         // Ensure current job is included
         if (!jobHistory.contains(player.getJob().getId())) {
+            player.sendMessage("Adding current job ID to job history: " + player.getJob().getId());
             jobHistory.add(player.getJob().getId());
         }
 
@@ -43,7 +49,9 @@ public class BuffMeCommand extends Command {
         }
 
         player.saveJobHistory(); // Save job history to database
+        player.sendMessage("Job history saved: " + jobHistory);
     }
+
 
     private void applyBuffsForJob(Character player, int jobId) {
         Map<Integer, List<Integer>> jobBuffs = new HashMap<>();

@@ -6460,14 +6460,18 @@ public class Character extends AbstractCharacterObject {
             if (rs.next()) {
                 String jobHistoryStr = rs.getString("JobHistory");
                 jobHistory = Arrays.asList(jobHistoryStr.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
+                System.out.println("Loaded job history from database: " + jobHistory);
             } else {
                 jobHistory = new ArrayList<>(); // Initialize jobHistory if no data found
+                System.out.println("No job history found, initializing new job history.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
             jobHistory = new ArrayList<>(); // Initialize jobHistory in case of an error
+            System.out.println("Error loading job history, initializing new job history.");
         }
     }
+
 
     // Method to save job history to the database
     public void saveJobHistory() {
