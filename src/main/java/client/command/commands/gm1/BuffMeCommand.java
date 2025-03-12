@@ -42,7 +42,9 @@ public class BuffMeCommand extends Command {
         // Collect all jobs in the player's advancement path and ensure they are in jobHistory
         Set<Integer> allJobs = new HashSet<>();
         for (int jobId : jobHistory) {
-            allJobs.addAll(getJobPath(jobId));
+            List<Integer> pathJobs = getJobPath(jobId);
+            allJobs.addAll(pathJobs);
+            player.sendMessage("Collected job path for job ID " + jobId + ": " + pathJobs);
         }
 
         // Apply buffs from all collected jobs
@@ -57,6 +59,7 @@ public class BuffMeCommand extends Command {
         player.saveJobHistory(); // Save job history to database
         player.sendMessage("Job history saved: " + jobHistory);
     }
+
 
 
     private void applyBuffsForJob(Character player, int jobId) {
