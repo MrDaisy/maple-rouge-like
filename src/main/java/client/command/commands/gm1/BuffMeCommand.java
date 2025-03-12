@@ -15,7 +15,7 @@ public class BuffMeCommand extends Command {
     @Override
     public void execute(Client c, String[] params) {
         Character player = c.getPlayer();
-        player.loadJobHistory(); // Load job history from database
+        player.loadJobHistory(); // Load job history from the database
 
         List<Integer> jobHistory = player.getJobHistory();
 
@@ -28,15 +28,12 @@ public class BuffMeCommand extends Command {
             // Record the current class ID into the database
             player.sendMessage("Recording current job ID to job history: " + player.getJob().getId());
             jobHistory.add(player.getJob().getId());
-            player.saveJobHistory();
-            player.sendMessage("Job history saved: " + jobHistory);
-            return;
-        }
-
-        // Ensure current job is included
-        if (!jobHistory.contains(player.getJob().getId())) {
-            player.sendMessage("Adding current job ID to job history: " + player.getJob().getId());
-            jobHistory.add(player.getJob().getId());
+        } else {
+            // Ensure the current job is included
+            if (!jobHistory.contains(player.getJob().getId())) {
+                player.sendMessage("Adding current job ID to job history: " + player.getJob().getId());
+                jobHistory.add(player.getJob().getId());
+            }
         }
 
         // Collect all jobs in the player's advancement path and ensure they are in jobHistory
@@ -47,20 +44,23 @@ public class BuffMeCommand extends Command {
             player.sendMessage("Collected job path for job ID " + jobId + ": " + pathJobs);
         }
 
-        // Apply buffs from all collected jobs
+        // Add all job IDs from the path to jobHistory
         for (int jobId : allJobs) {
             if (!jobHistory.contains(jobId)) {
                 jobHistory.add(jobId);
                 player.sendMessage("Added job ID to job history: " + jobId);
             }
+        }
+
+        // Apply buffs from all collected jobs
+        for (int jobId : allJobs) {
             applyBuffsForJob(player, jobId);
         }
 
-        player.saveJobHistory(); // Save job history to database
+        // Save the updated job history to the database
+        player.saveJobHistory();
         player.sendMessage("Job history saved: " + jobHistory);
     }
-
-
 
     private void applyBuffsForJob(Character player, int jobId) {
         Map<Integer, List<Integer>> jobBuffs = new HashMap<>();
