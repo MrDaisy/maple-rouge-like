@@ -39,7 +39,7 @@ public class BuffMeCommand extends Command {
             jobHistory.add(player.getJob().getId());
         }
 
-        // Collect all jobs in the player's advancement path
+        // Collect all jobs in the player's advancement path and ensure they are in jobHistory
         Set<Integer> allJobs = new HashSet<>();
         for (int jobId : jobHistory) {
             allJobs.addAll(getJobPath(jobId));
@@ -47,6 +47,10 @@ public class BuffMeCommand extends Command {
 
         // Apply buffs from all collected jobs
         for (int jobId : allJobs) {
+            if (!jobHistory.contains(jobId)) {
+                jobHistory.add(jobId);
+                player.sendMessage("Added job ID to job history: " + jobId);
+            }
             applyBuffsForJob(player, jobId);
         }
 
@@ -500,8 +504,8 @@ public class BuffMeCommand extends Command {
         while (jobPaths.containsKey(currentJob)) {
             fullPath.add(currentJob);
             List<Integer> previousJobs = jobPaths.get(currentJob);
+            System.out.println("Current job: " + currentJob + ", Previous jobs: " + previousJobs); // Debug message
             if (previousJobs.isEmpty()) break;
-            System.out.println("Current job: " + currentJob + ", Previous jobs: " + previousJobs);
             currentJob = previousJobs.get(0); // Always take the first (previous) job
         }
 
@@ -510,7 +514,7 @@ public class BuffMeCommand extends Command {
             fullPath.add(currentJob);
         }
 
-        System.out.println("Full job path for job ID " + jobId + ": " + fullPath);
+        System.out.println("Full job path for job ID " + jobId + ": " + fullPath); // Debug message
         return fullPath;
     }
 }
