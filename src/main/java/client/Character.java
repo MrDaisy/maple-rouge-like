@@ -6454,7 +6454,7 @@ public class Character extends AbstractCharacterObject {
     public void loadJobHistory() {
         try (Connection con = DatabaseConnection.getConnection()) {
             System.out.println("Connecting to database to load job history for character ID: " + this.getId());
-            PreparedStatement ps = con.prepareStatement("SELECT JobHistory FROM Character WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT JobHistory FROM `Character` WHERE id = ?");
             ps.setInt(1, this.getId()); // Assuming getId() returns the character's ID
             ResultSet rs = ps.executeQuery();
 
@@ -6477,9 +6477,10 @@ public class Character extends AbstractCharacterObject {
             System.out.println("Error loading job history for character ID: " + this.getId() + ", initializing new job history.");
         }
     }
+
     public void saveJobHistory() {
         try (Connection con = DatabaseConnection.getConnection()) {
-            PreparedStatement ps = con.prepareStatement("UPDATE Character SET JobHistory = ? WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("UPDATE `Character` SET JobHistory = ? WHERE id = ?");
             String jobHistoryStr = jobHistory.stream().map(String::valueOf).collect(Collectors.joining(","));
             ps.setString(1, jobHistoryStr);
             ps.setInt(2, this.getId()); // Assuming getId() returns the character's ID
