@@ -6485,15 +6485,17 @@ public class Character extends AbstractCharacterObject {
             System.out.println("Database connection established for saving job history.");
             PreparedStatement ps = con.prepareStatement("UPDATE `characters` SET jobHistory = ? WHERE id = ?");
             String jobHistoryStr = jobHistory.stream().map(String::valueOf).collect(Collectors.joining(","));
+            System.out.println("Saving job history: " + jobHistoryStr); // Debug message
             ps.setString(1, jobHistoryStr);
             ps.setInt(2, this.getId());
             ps.executeUpdate();
-            System.out.println("Saved job history to database: " + jobHistory);
+            System.out.println("Saved job history to database: " + jobHistoryStr);
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
 
 

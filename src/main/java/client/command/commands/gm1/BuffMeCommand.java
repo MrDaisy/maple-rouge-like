@@ -12,8 +12,6 @@ public class BuffMeCommand extends Command {
     {
         setDescription("Activate buffs based on the player's job history.");
     }
-
-
     @Override
     public void execute(Client c, String[] params) {
         Character player = c.getPlayer();
@@ -51,7 +49,6 @@ public class BuffMeCommand extends Command {
         player.saveJobHistory(); // Save job history to database
         player.sendMessage("Job history saved: " + jobHistory);
     }
-
 
     private void applyBuffsForJob(Character player, int jobId) {
         Map<Integer, List<Integer>> jobBuffs = new HashMap<>();
