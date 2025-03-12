@@ -6452,10 +6452,11 @@ public class Character extends AbstractCharacterObject {
 
     // Method to load job history from the database
     public void loadJobHistory() {
+        System.out.println("Connecting to database to load job history for character ID: " + this.getId());
         try (Connection con = DatabaseConnection.getConnection()) {
-            System.out.println("Connecting to database to load job history for character ID: " + this.getId());
+            System.out.println("Database connection established for loading job history.");
             PreparedStatement ps = con.prepareStatement("SELECT JobHistory FROM `Character` WHERE id = ?");
-            ps.setInt(1, this.getId()); // Assuming getId() returns the character's ID
+            ps.setInt(1, this.getId());
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -6464,32 +6465,35 @@ public class Character extends AbstractCharacterObject {
                     jobHistory = Arrays.asList(jobHistoryStr.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
                     System.out.println("Loaded job history from database: " + jobHistory);
                 } else {
-                    jobHistory = new ArrayList<>(); // Initialize jobHistory if no data found
+                    jobHistory = new ArrayList<>();
                     System.out.println("Job history is empty in database, initializing new job history.");
                 }
             } else {
-                jobHistory = new ArrayList<>(); // Initialize jobHistory if no data found
+                jobHistory = new ArrayList<>();
                 System.out.println("No job history found for character ID: " + this.getId() + ", initializing new job history.");
             }
         } catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
             e.printStackTrace();
-            jobHistory = new ArrayList<>(); // Initialize jobHistory in case of an error
+            jobHistory = new ArrayList<>();
             System.out.println("Error loading job history for character ID: " + this.getId() + ", initializing new job history.");
         }
     }
-
     public void saveJobHistory() {
         try (Connection con = DatabaseConnection.getConnection()) {
+            System.out.println("Database connection established for saving job history.");
             PreparedStatement ps = con.prepareStatement("UPDATE `Character` SET JobHistory = ? WHERE id = ?");
             String jobHistoryStr = jobHistory.stream().map(String::valueOf).collect(Collectors.joining(","));
             ps.setString(1, jobHistoryStr);
-            ps.setInt(2, this.getId()); // Assuming getId() returns the character's ID
+            ps.setInt(2, this.getId());
             ps.executeUpdate();
             System.out.println("Saved job history to database: " + jobHistory);
         } catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     public void sendMessage(String message) {
         this.getClient().sendPacket(PacketCreator.serverNotice(5, message));
