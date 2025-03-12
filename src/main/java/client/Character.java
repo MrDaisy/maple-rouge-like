@@ -195,6 +195,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static constants.game.GameConstants.LOOT_LIZARD_ID;
 import static constants.game.GameConstants.LOOT_LIZARD_SPAWN_COOLDOWN;
@@ -6436,10 +6440,43 @@ public class Character extends AbstractCharacterObject {
     /*JOB history for @buffme is stored below here.
     * @buffmecommand.java job path and logic
     * */
-    private List<Integer> jobHistory = new ArrayList<>();
+    private List<Integer> jobHistory;
 
     public List<Integer> getJobHistory() {
         return jobHistory;
+    }
+
+    public void setJobHistory(List<Integer> jobHistory) {
+        this.jobHistory = jobHistory;
+    }
+
+    // Method to load job history from the database
+    public void loadJobHistory() {
+        try (Connection con = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT JobHistory FROM Character WHERE id = ?");
+            ps.setInt(1, this.getId()); // Assuming getId() returns the character's ID
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String jobHistoryStr = rs.getString("JobHistory");
+                jobHistory = Arrays.asList(jobHistoryStr.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method to save job history to the database
+    public void saveJobHistory() {
+        try (Connection con = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = con.prepareStatement("UPDATE Character SET JobHistory = ? WHERE id = ?");
+            String jobHistoryStr = jobHistory.stream().map(String::valueOf).collect(Collectors.joining(","));
+            ps.setString(1, jobHistoryStr);
+            ps.setInt(2, this.getId()); // Assuming getId() returns the character's ID
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     public void sendMessage(String message) {
         this.getClient().sendPacket(PacketCreator.serverNotice(5, message));

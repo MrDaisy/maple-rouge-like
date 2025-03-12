@@ -13,10 +13,13 @@ public class BuffMeCommand extends Command {
         setDescription("Activate buffs based on the player's job history.");
     }
 
+
     @Override
     public void execute(Client c, String[] params) {
         Character player = c.getPlayer();
-        List<Integer> jobHistory = player.getJobHistory(); // Ensure this method exists in Character.java
+        player.loadJobHistory(); // Load job history from database
+
+        List<Integer> jobHistory = player.getJobHistory();
 
         if (jobHistory.isEmpty()) {
             player.sendMessage("You still have not attained any buffs.");
@@ -38,6 +41,8 @@ public class BuffMeCommand extends Command {
         for (int jobId : allJobs) {
             applyBuffsForJob(player, jobId);
         }
+
+        player.saveJobHistory(); // Save job history to database
     }
 
     private void applyBuffsForJob(Character player, int jobId) {
