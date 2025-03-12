@@ -6455,12 +6455,12 @@ public class Character extends AbstractCharacterObject {
         System.out.println("Connecting to database to load job history for character ID: " + this.getId());
         try (Connection con = DatabaseConnection.getConnection()) {
             System.out.println("Database connection established for loading job history.");
-            PreparedStatement ps = con.prepareStatement("SELECT JobHistory FROM `characters` WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT jobHistory FROM `characters` WHERE id = ?");
             ps.setInt(1, this.getId());
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                String jobHistoryStr = rs.getString("JobHistory");
+                String jobHistoryStr = rs.getString("jobHistory");
                 if (jobHistoryStr != null && !jobHistoryStr.isEmpty()) {
                     jobHistory = Arrays.asList(jobHistoryStr.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
                     System.out.println("Loaded job history from database: " + jobHistory);
@@ -6479,10 +6479,11 @@ public class Character extends AbstractCharacterObject {
             System.out.println("Error loading job history for character ID: " + this.getId() + ", initializing new job history.");
         }
     }
+
     public void saveJobHistory() {
         try (Connection con = DatabaseConnection.getConnection()) {
             System.out.println("Database connection established for saving job history.");
-            PreparedStatement ps = con.prepareStatement("UPDATE `characters` SET JobHistory = ? WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("UPDATE `characters` SET jobHistory = ? WHERE id = ?");
             String jobHistoryStr = jobHistory.stream().map(String::valueOf).collect(Collectors.joining(","));
             ps.setString(1, jobHistoryStr);
             ps.setInt(2, this.getId());
@@ -6493,6 +6494,7 @@ public class Character extends AbstractCharacterObject {
             e.printStackTrace();
         }
     }
+
 
 
     public void sendMessage(String message) {
