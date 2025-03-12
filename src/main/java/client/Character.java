@@ -6477,10 +6477,6 @@ public class Character extends AbstractCharacterObject {
             System.out.println("Error loading job history for character ID: " + this.getId() + ", initializing new job history.");
         }
     }
-
-
-
-    // Method to save job history to the database
     public void saveJobHistory() {
         try (Connection con = DatabaseConnection.getConnection()) {
             PreparedStatement ps = con.prepareStatement("UPDATE Character SET JobHistory = ? WHERE id = ?");
@@ -6488,10 +6484,12 @@ public class Character extends AbstractCharacterObject {
             ps.setString(1, jobHistoryStr);
             ps.setInt(2, this.getId()); // Assuming getId() returns the character's ID
             ps.executeUpdate();
+            System.out.println("Saved job history to database: " + jobHistory);
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
+
     public void sendMessage(String message) {
         this.getClient().sendPacket(PacketCreator.serverNotice(5, message));
     }
