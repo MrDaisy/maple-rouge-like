@@ -415,7 +415,7 @@ public class BuffMeCommand extends Command {
         }
     }
     private List<Integer> getJobPath(int jobId) {
-        Map<Integer, List<Integer>> jobPaths = new HashMap<>();
+        Map<Integer, List<Integer>> jobPaths = new HashMap
 
         // Define full job paths
         jobPaths.put(112, Arrays.asList(111, 110, 100)); // Hero
@@ -492,7 +492,7 @@ public class BuffMeCommand extends Command {
         jobPaths.put(1110, Arrays.asList(1100, 1000));
         jobPaths.put(1100, Arrays.asList(1000));
 
-        // Dynamically construct full path
+// Dynamically construct full path
         List<Integer> fullPath = new ArrayList<>();
         int currentJob = jobId;
 
@@ -501,12 +501,16 @@ public class BuffMeCommand extends Command {
             fullPath.add(currentJob);
             List<Integer> previousJobs = jobPaths.get(currentJob);
             if (previousJobs.isEmpty()) break;
+            System.out.println("Current job: " + currentJob + ", Previous jobs: " + previousJobs);
             currentJob = previousJobs.get(0); // Always take the first (previous) job
         }
 
-        // Add the final base job
-        fullPath.add(currentJob);
+        // Add the final base job if not already added
+        if (!fullPath.contains(currentJob)) {
+            fullPath.add(currentJob);
+        }
 
+        System.out.println("Full job path for job ID " + jobId + ": " + fullPath);
         return fullPath;
     }
 }
