@@ -6440,7 +6440,7 @@ public class Character extends AbstractCharacterObject {
     /*JOB history for @buffme is stored below here.
     * @buffmecommand.java job path and logic
     * */
-    private List<Integer> jobHistory;
+    private List<Integer> jobHistory = new ArrayList<>(); // Initialize jobHistory
 
     public List<Integer> getJobHistory() {
         return jobHistory;
@@ -6460,9 +6460,12 @@ public class Character extends AbstractCharacterObject {
             if (rs.next()) {
                 String jobHistoryStr = rs.getString("JobHistory");
                 jobHistory = Arrays.asList(jobHistoryStr.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
+            } else {
+                jobHistory = new ArrayList<>(); // Initialize jobHistory if no data found
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            jobHistory = new ArrayList<>(); // Initialize jobHistory in case of an error
         }
     }
 
@@ -6475,7 +6478,7 @@ public class Character extends AbstractCharacterObject {
             ps.setInt(2, this.getId()); // Assuming getId() returns the character's ID
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+
         }
     }
     public void sendMessage(String message) {
