@@ -6495,10 +6495,6 @@ public class Character extends AbstractCharacterObject {
             e.printStackTrace();
         }
     }
-
-
-
-
     public void sendMessage(String message) {
         this.getClient().sendPacket(PacketCreator.serverNotice(5, message));
     }
